@@ -1,13 +1,13 @@
+
+const { StatusCodes } = require('http-status-codes');
 const {
-  NJT_FOUND,
+  NOT_FOUND,
   EXPECTATION_FAILED,
   UNAUTHORIZED,
   FORBIDDEN,
   BAD_REQUEST,
   getStatusText
-
-} = require('http-status-code');
-
+} = StatusCodes;
 class AppError extends Error {
   constructor(message) {
     super(message);
@@ -19,7 +19,7 @@ class NotFoundError extends AppError {
     super(message || `Coudn't find a(an) ${entity}
     with ${params}
     `);
-    this.status = NJT_FOUND;
+    this.status = NOT_FOUND;
   };
 };
 

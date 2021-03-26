@@ -1,4 +1,5 @@
-const { INTERNAL_SERVER_ERROR, getStatusText } = require('http-status-code');
+const { StatusCodes, getReasonPhrase } = require('http-status-codes');
+const { INTERNAL_SERVER_ERROR } = StatusCodes;
 const logger = require('../../config/logger');
 
 const errorHandler = (err, req, res, next) => {
@@ -9,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
     logger.error(err.stack);
     res
       .status(INTERNAL_SERVER_ERROR)
-      .send(getStatusText(INTERNAL_SERVER_ERROR));
+      .send(getReasonPhrase(INTERNAL_SERVER_ERROR));
   }
 
   next();

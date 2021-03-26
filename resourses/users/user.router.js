@@ -1,23 +1,33 @@
 const { Router } = require('express');
+const { StatusCodes } = require('http-status-codes');
+const { OK, NO_CONTENT } = StatusCodes;
+const { userService } = require('./user.service');
+const userRouter = Router();
 
-const userRouer = Router();
 
 /*
 Использую только GET и POST - практически все данные отправляются через формы, которые умеют только это
 */
-userRouer.post('/users/register', async (req, res) => { });
+userRouter.post('/register', async (req, res) => {
+  const userEntity = await userService.register(req.body);
 
-userRouter.post('/users/login', async (req, res) => { });
+  res.status(OK).send(userEntity);
 
-userRouer.post('/users/update', async (req, res) => { });
 
-userRouer.post('/users/update', async (req, res) => { });
 
-userRouer.get('/users/:userId', async (req, res) => { });
+ });
+
+userRouter.post('/login', async (req, res) => { });
+
+userRouter.post('/update', async (req, res) => { });
+
+userRouter.post('/delete', async (req, res) => { });
+
+userRouter.get('/:userId', async (req, res) => { });
 
 // Роль юзера минимально заканчивается тут
 
 
 
 
-module.exports = userRouer;
+module.exports = userRouter;

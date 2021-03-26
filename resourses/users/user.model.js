@@ -1,9 +1,5 @@
-/* Папка, позволяющая создавать, изменять и удалять юзеров. Роуты авторизаии, регистрации и middleware тоже тут. Здесь userService , именно он используется в роутере для определения тех или иных действий 
-
-Юзеры разных ролей: роль админа, роль пользователя. В дальнейшем список будет расширяться. Предусмотреть создание новые ролей из админки.
-*/
-
 const { Schema, model } = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new Schema({
   name: {
@@ -38,7 +34,19 @@ const UserSchema = new Schema({
   }  
 
 
+})
 
+UserSchema.pre('save', async function preSave(next) {
+  this.password = await bcrypt.hash(this.password, 10);
+  next()
+});
+
+UserSchema.pre('findOneAndUpdate', async function preUpdate(next) {
+  if (this._update.$set.password) {
+    this._update.$set.password = await bcrypt.hash(this._update.$set.password, 10)
+  }
+
+  next();
 })
 
 

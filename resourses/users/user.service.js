@@ -5,28 +5,23 @@ const { createUser,
   updateUser,
   deleteUser } = require('./user.methods.db');
 
-  /*
-  Именно этот роут делает дополнительные проверки. Ну то есть, копирует будущие роуты.
-  От самих роутов задача - вытащить нужные данные, вызвать нужную функцию и выслать ответ. 
+
+
+const register = async (userData) => await createUser(userData);
+const getById = async (userId) => await findUserById(userId);
+const getByLogin = async (login) => await findUserByLogin(login);
+const getByEmail = async (email) => await findUserByEmail(email);
+const update = async (userData) => await updateUser(userData);
+const del = async (userId) => await deleteUser(userId);
   
-  */
+const userService =   {
+  register,
+  getById,
+  getByLogin,
+  getByEmail,
+  update
+}
 
-const UserService = {
-  register: async (userData) => {
-
-    const { email, login } = userData;
-    
-    const userEmailExists = await findUserByEmail(email);
-    const userLoginExists = await findUserByLogin(login);
-      // По хорошему, здесь бы ошибку выкинуть и перехватить обработчиками. 
-    if (userEmailExists || userLoginExists) {
-      return {
-        message: 'User already exists'
-      }
-    }
-
-    return await createUser(userData);
-
-
-    }
-  }
+module.exports = {
+  userService
+}
