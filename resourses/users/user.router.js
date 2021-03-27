@@ -10,7 +10,6 @@ const userRouter = Router();
 */
 userRouter.post('/register', async (req, res) => {
   const userEntity = await userService.register(req.body);
-
   res.status(OK).send(userEntity);
 
 

@@ -1,0 +1,78 @@
+openapi: 3.0.0
+info:
+  title: Backend API for Fadviser Financial service
+  version: 0.0.1
+
+servers: 
+  - url: /
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id: 
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+          required: true
+        login:
+          type: string
+        password:
+          type: string
+        avtar:
+          type: string
+
+security:
+  - bearerAuth: []
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - Register
+      security: 
+        []
+      summary: Register
+      description: Creates new user
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                name:
+                  type: string
+                  description: User real name
+                email:
+                  type: string
+                  description: User email
+                  required: true
+                  unique: true
+                login:
+                  type: string
+                  description: User login
+                  required: true
+                  unique: true
+                password:
+                  type: string
+                  description: User password
+                  required: true
+                avatar:
+                  type: string
+                  description: User avatar. Temprorary is string
+      responses:
+        200:
+          description: Successfull creation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        417: 
+          description: User already exists
+
+
