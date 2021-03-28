@@ -1,12 +1,12 @@
 
-const { StatusCodes } = require('http-status-codes');
+const { StatusCodes, getReasonPhrase } = require('http-status-codes');
 const {
   NOT_FOUND,
   EXPECTATION_FAILED,
   UNAUTHORIZED,
   FORBIDDEN,
   BAD_REQUEST,
-  getStatusText
+  getStatusText,
 } = StatusCodes;
 class AppError extends Error {
   constructor(message) {
@@ -39,14 +39,14 @@ class EntityExistsError extends AppError {
 
 class AuthorizationError extends AppError {
   constructor(message) {
-    super(message || getStatusText(UNAUTHORIZED));
+    super(message || getReasonPhrase(UNAUTHORIZED));
     this.status = UNAUTHORIZED;
   };
 };
 
 class AuthenticationError extends Error {
   constructor(message) {
-    super(message || getStatusText(FORBIDDEN));
+    super(message || getReasonPhrase(FORBIDDEN));
     this.status = FORBIDDEN;
   }
 }

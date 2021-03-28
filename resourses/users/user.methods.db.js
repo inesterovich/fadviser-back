@@ -44,16 +44,22 @@ const findUserByEmail = async (email) => {
   return user;
 }
 
-const updateUser = async (id, login, email, password, name, avatar) => {
+const updateUser = async (userData) => {
 
-  return await UserModel.findOneAndUpdate({ _id: id }, {
-    $set: {
-      login,
-      email,
-      password,
-      name,
-      avatar
+  const { _id } = userData;
+
+  const updateObject = {};
+
+  for (key in userData) {
+    if (key) {
+      updateObject[key] = userData[key];
     }
+  }
+
+
+
+  return await UserModel.findOneAndUpdate({ _id: _id  }, {
+    $set: updateObject
   },
     { new: true}
   

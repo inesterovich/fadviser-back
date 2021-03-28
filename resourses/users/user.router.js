@@ -1,31 +1,45 @@
-const { Router } = require('express');
+const { Router, raw } = require('express');
 const { StatusCodes } = require('http-status-codes');
 const { OK, NO_CONTENT } = StatusCodes;
 const { userService } = require('./user.service');
+
 const userRouter = Router();
 
+const userSecureRouter = require('./user.secure.router');
 
-/*
-Использую только GET и POST - практически все данные отправляются через формы, которые умеют только это
-*/
+
 userRouter.post('/register', async (req, res) => {
   const userEntity = await userService.register(req.body);
   res.status(OK).send(userEntity);
 
 
-
  });
 
-userRouter.post('/login', async (req, res) => { });
+userRouter.post('/login', async (req, res) => {
 
-userRouter.post('/update', async (req, res) => { });
+ 
+  const { login, password } = req.body;
+  
+  const userTokens = await userService.login(login, password);
 
-userRouter.post('/delete', async (req, res) => { });
+  res.status(OK).json(userTokens);
 
-userRouter.get('/:userId', async (req, res) => { });
+});
 
-// Роль юзера минимально заканчивается тут
+userRouter.use('/:userId', userSecureRouter)
 
+
+ 
+// Зачем мне сейчас UUID ? Он мне нужен только для обновлений. Для проверки существующих роутов - нет
+
+// Auth
+/*
+
+ 
+
+
+
+*/
 
 
 

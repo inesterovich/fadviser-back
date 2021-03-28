@@ -22,12 +22,19 @@ const server = express();
 
 
 server.use(helmet());
-server.use(cors());
+
+const corsOptions = {
+  methods: 'GET, POST'
+}
+server.use(cors(corsOptions));
+
 server.use(express.json({ extended: true }));
 server.use(express.urlencoded({ extended: true }));
 
 server.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-
+/*
+По факту, я смогу попробовать посмотреть, что происходит с типичными запросами, когда сделаю доку для них
+*/
 /* App routes */
 server.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
@@ -58,9 +65,9 @@ async function start() {
   try {
     await mongoose.connect(MONGO_CONNECTION_STRING, {
       useNewUrlParser: true,
-      useFindAndModify: true,
       useUnifiedTopology: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: false
     });
 
     winston.info('Successfully connect to database');

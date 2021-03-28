@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
+const randomString = require('randomstring');
+
 
 const UserSchema = new Schema({
   name: {
@@ -29,6 +31,10 @@ const UserSchema = new Schema({
      default: 'Not Found'
   },
 
+  userSecret: {
+    type: String,
+  },
+
   userService: {
     // Тут будет отдельная схема или даже модель, предусматривающая возможность включить новые модули
   }  
@@ -36,8 +42,10 @@ const UserSchema = new Schema({
 
 })
 
+
 UserSchema.pre('save', async function preSave(next) {
   this.password = await bcrypt.hash(this.password, 10);
+  this.userSecret = randomString.generate(7);
   next()
 });
 
@@ -45,6 +53,8 @@ UserSchema.pre('findOneAndUpdate', async function preUpdate(next) {
   if (this._update.$set.password) {
     this._update.$set.password = await bcrypt.hash(this._update.$set.password, 10)
   }
+
+  this.userSecret = randomString.generate(7);
 
   next();
 })
