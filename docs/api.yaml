@@ -22,9 +22,25 @@ components:
           type: string
         password:
           type: string
-        avtar:
+        avatar:
           type: string
-
+    Tokens:
+      type: object
+      properties:
+        token: 
+          type: string
+        expiredToken:
+          type: string
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    UnauthenticatedError:
+      description: Access token is missing, expired or invalid
+  securitySchemes:
+    bearerAuth:
+      type: http
+      schema: bearer
+      bearerFormat: JWT
 security:
   - bearerAuth: []
 
@@ -32,7 +48,7 @@ paths:
   /users/register:
     post:
       tags:
-        - Register
+        - Authorization
       security: 
         []
       summary: Register
@@ -74,5 +90,124 @@ paths:
                 $ref: "#/components/schemas/User"
         417: 
           description: User already exists
-
-
+  /users/login:
+    post:
+      tags:
+        - Authorization
+      security:
+        []
+      summary: Login
+      description: Allows to get userTokens or send error message
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema: 
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                  description: User login
+                  required: true
+                password:
+                  type: string
+                  description: User password
+                  required: true
+      responses:
+        200:
+          description: Successfull Authorization
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tokens"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        422:
+          description: Invalid login or password
+  /users/{userId}:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Users
+      summary: Get user
+      description: Gets user
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/User"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+  /users/{userId}/update:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Users
+      summary: Update user
+      description: Should get any data for update. No required fields in request body
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                name:
+                  type: string
+                login:
+                  type: string
+                email:
+                  type: string
+                password: 
+                  type: string
+                avatar:
+                  type: string       
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/User"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+  /users/{userId}/delete:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Users
+      summary: Delete user
+      description: Permamently deletes user
+      responses:
+        204:
+          description: Successful operation. User is not existed anymore
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found

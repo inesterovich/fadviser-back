@@ -29,7 +29,7 @@ res.status(OK).send(userEntity);
 
 });
 
-userSecureRouter.post('/delete', async (req, res) => {
+userSecureRouter.get('/delete', async (req, res) => {
 const { userId } = req;
 await userService.del(userId);
 
