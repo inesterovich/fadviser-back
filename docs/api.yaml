@@ -36,10 +36,12 @@ components:
       description: Access token is missing or invalid
     UnauthenticatedError:
       description: Access token is missing, expired or invalid
+    InternalServerError:
+      description: Internal Server Error
   securitySchemes:
     bearerAuth:
       type: http
-      schema: bearer
+      scheme: bearer
       bearerFormat: JWT
 security:
   - bearerAuth: []
@@ -82,14 +84,12 @@ paths:
                   type: string
                   description: User avatar. Temprorary is string
       responses:
-        200:
+        201:
           description: Successfull creation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
         417: 
           description: User already exists
+        500:
+          $ref: '#/components/responses/InternalServerError'
   /users/login:
     post:
       tags:

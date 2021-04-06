@@ -6,7 +6,7 @@ const randomString = require('randomstring');
 const UserSchema = new Schema({
   name: {
     type: String,
-    default: ''
+    default: 'NoName'
   },
 
   email: {
@@ -28,7 +28,7 @@ const UserSchema = new Schema({
 
   avatar: {
     type: String,
-     default: 'Not Found'
+     default: 'Example avatar'
   },
 
   userSecret: {
