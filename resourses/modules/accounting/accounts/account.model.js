@@ -34,7 +34,7 @@ AccountSchema.methods.sortOperations = function () {
           const croppedArray = this.operations.slice(1).sort((a, b) => a.date > b.date ? 1 : -1)
   
           this.operations = [this.operations[0], ...croppedArray];
-        //Может сюда воткнуть проверку на дату?
+ 
       }
      
     
@@ -57,7 +57,6 @@ AccountSchema.methods.updateDate = function (editedOperaation) {
    
   if (this.operations.length > 1) {
     
-    console.log(this.operations);
    
     
       if (this.operations[0].date >= this.operations[1].date) {

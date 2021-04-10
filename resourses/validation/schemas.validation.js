@@ -1,8 +1,7 @@
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
-// Две схемы одного юзера на создание и на обновление?
-// Сделать техническое поле type? И удалять его перед сохранением?
+
 const schemas = {
   _id: Joi.object().options({ abortEarly: true, allowUnknown: true}),
   userCreate: Joi.object()
@@ -25,7 +24,29 @@ const schemas = {
   userLogin: Joi.object().options({ abortEarly: true, allowUnknown: false }).keys({
     login: Joi.string().required(),
     password: Joi.string().min(6).required()
-  })
+  }),
+  accountCreate: Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
+    name: Joi.string().required(),
+    accountType: Joi.string()
+  }),
+  accountUpdate:  Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
+    _id: Joi.objectId().required(),
+    name: Joi.string().required(),
+    accountType: Joi.string()
+  }),
+  operationCreate: Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
+    date: Joi.date().required(),
+    category: Joi.string().required(),
+    operationType: Joi.string().required(),
+    sum: Joi.number().required()
+  }),
+  operationUpdate: Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
+    _id: Joi.objectId().required(),
+    date: Joi.date().required(),
+    category: Joi.string().required(),
+    operationType: Joi.string().required(),
+    sum: Joi.number().required()
+  }),
 };
 
 

@@ -43,14 +43,14 @@ const updateOperation = async (accountId, operationData) => {
     account.sortOperations();
     account.updateSum();
     account.updateDate(operationData);
-      await account.save();
+    await account.save();
   
     
     
     
     return account; 
   } catch (error) {
-    console.log(error)
+    throw error;
   }
 }
 
