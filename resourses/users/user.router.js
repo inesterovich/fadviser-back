@@ -8,6 +8,7 @@ const { userCreate,  userLogin } = require('../validation/schemas.validation');
 const userRouter = Router();
 
 const userSecureRouter = require('./user.secure.router');
+const AcccountsSecureRouter = require('../modules/accounting/accounts/accounts.secure.router');
 
 
 userRouter.post('/register', validator(userCreate, 'body'), async (req, res) => {
@@ -24,7 +25,9 @@ userRouter.post('/login', validator(userLogin, 'body'), async (req, res) => {
 
 });
 
-userRouter.use('/:userId', userSecureRouter)
+userRouter.use('/:userId', userSecureRouter);
+userRouter.use('/:userId/accounts', AcccountsSecureRouter);
+// Сюда получается надо навешивать модули?
 
 
  
