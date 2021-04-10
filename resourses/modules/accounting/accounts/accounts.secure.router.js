@@ -11,6 +11,13 @@ const AcccountsSecureRouter = Router({ mergeParams: true });
 
 AcccountsSecureRouter.all('*', validator(_id, 'params'), checkToken, decodeToken, userIdValidator, validateToken);
 
+
+AcccountsSecureRouter.get('/', async (req, res) => {
+  const userAccounts = await AccountService.getAll(req.params.userId);
+
+  return res.status(OK).json(userAccounts);
+})
+  
 AcccountsSecureRouter.post('/create', validator(accountCreate, 'body'),
   async (req, res) => {
   const { userId } = req.params;
@@ -20,7 +27,18 @@ AcccountsSecureRouter.post('/create', validator(accountCreate, 'body'),
   res.status(OK).json({ account });
   })
 
-AcccountsSecureRouter.post('/:accountId/delete', async (req, res) => {
+  AcccountsSecureRouter.get('/:accountId/', async (req, res) => {
+ 
+    const account = await AccountService.get(req.params.userId);
+
+    res.status(OK).json(account);
+  })
+
+
+
+
+  // Нужен роут на получение всех аккаунтов, на получение одного акка
+AcccountsSecureRouter.get('/:accountId/delete', async (req, res) => {
  
   await AccountService.del(req.params.accountId);
 

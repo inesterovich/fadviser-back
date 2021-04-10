@@ -33,6 +33,7 @@
   "devDependencies": {
     "eslint": "^7.22.0",
     "eslint-plugin-node": "^11.1.0",
+    "express-list-endpoints": "^5.0.0",
     "nodemon": "^2.0.7"
   }
 }

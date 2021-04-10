@@ -17,7 +17,6 @@ components:
           type: string
         email:
           type: string
-          required: true
         login:
           type: string
         password:
@@ -31,6 +30,41 @@ components:
           type: string
         expiredToken:
           type: string
+    Operation:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+          example: "60703794c4da8b26d823f144"
+        date: 
+          type: string
+          format: date-time
+        category:
+          type: string
+        operationType:
+          type: string
+        sum:
+          type: number
+    Account:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+          example: "60703794c4da8b26d823f144"
+        name:
+          type: string
+        operations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Operation"
+        sum:
+          type: number
+        owner:
+          type: string
+          format: objectId
+          example: "60703794c4da8b26d823f144"
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
@@ -61,28 +95,21 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                  - email
+                  - login
+                  - password
               title: example
               properties:
-                name:
-                  type: string
-                  description: User real name
                 email:
                   type: string
                   description: User email
-                  required: true
-                  unique: true
                 login:
                   type: string
                   description: User login
-                  required: true
-                  unique: true
                 password:
                   type: string
                   description: User password
-                  required: true
-                avatar:
-                  type: string
-                  description: User avatar. Temprorary is string
       responses:
         201:
           description: Successfull creation
@@ -105,15 +132,16 @@ paths:
             schema: 
               type: object
               title: example
+              required:
+                  - login
+                  - password
               properties:
                 login:
                   type: string
                   description: User login
-                  required: true
                 password:
                   type: string
                   description: User password
-                  required: true
       responses:
         200:
           description: Successfull Authorization
@@ -211,3 +239,261 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: User not found
+  /users/{userId}/accounts:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Accounts
+      summary: Get all user accounts
+      description: Get all accounts of this user
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Account"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Accounts not found yet
+  /users/{userId}/accounts/{{accountId}}:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        description: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Accounts
+      summary: Get one account
+      description: Get one user Account
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /users/{userId}/accounts/create:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Accounts
+      summary: Create account
+      description: Create new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              required:
+                  - name
+                  - sum
+              properties:
+                name:
+                  type: string
+                sum:
+                  type: number
+      responses:
+        200:
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /users/{userId}/accounts/{accountId}/delete:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        description: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Accounts
+      summary: Delete account
+      description: Permamently deletes account
+      responses:
+        204:
+          description: Successful operation. Account is not existed anymore
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /users/{userId}/accounts/{accountId}/add:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        description: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Operations
+      summary: Add operation to account
+      description: Add operation to userAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                  - date
+                  - category
+                  - operationType
+                  - sum
+              properties:
+                date: 
+                  type: string
+                  format: date-time
+                category:
+                  type: string
+                operationType:
+                  type: string
+                sum:
+                  type: number
+      responses:
+        201:
+          description: Operation added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /users/{userId}/accounts/{accountId}/{operationId}/update:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        description: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: operationId
+        description: operationId
+        in: path
+        required: true
+        schema: 
+          type: string
+    post:
+      tags:
+        - Operations
+      summary: Update operation in userAccount
+      description: Update operation in userAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                  - _id
+                  - date
+                  - category
+                  - operationType
+                  - sum
+              properties:
+                _id: 
+                  type: string
+                  format: objectId
+                  example: "60703794c4da8b26d823f144"
+                date: 
+                  type: string
+                  format: date-time
+                category:
+                  type: string
+                operationType:
+                  type: string
+                sum:
+                  type: number
+      responses:
+        201:
+          description: Operation updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+  /users/{userId}/accounts/{accountId}/{operationId}/delete:
+    parameters:
+      - name: userId
+        description: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        description: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: operationId
+        description: operationId
+        in: path
+        required: true
+        schema: 
+          type: string
+    post:
+      tags:
+        - Operations
+      summary: Update operation in userAccount
+      description: Update operation in userAccount
+      responses:
+        204:
+          description: Operation deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'

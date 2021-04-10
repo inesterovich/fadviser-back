@@ -31,7 +31,7 @@ OperationSecureRouter.post('/:operationId/update',
 // Возможно нужно геттер на одну операцию
 
 //baseURL/users/:userId/accounts/:accountId/:operationId/delete
-OperationSecureRouter.post('/:operationId/delete',  async (req, res) => {
+OperationSecureRouter.get('/:operationId/delete',  async (req, res) => {
   const account = await OperationService.del(req.params.accountId, req.params.operationId);
   // Нужна проверка на несуществующую операцию
 

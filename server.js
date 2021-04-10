@@ -10,6 +10,7 @@ const { NOT_FOUND } = StatusCodes;
 const path = require('path');
 const userRouter = require('./resourses/users/user.router');
 
+
 const swaggerDocument = YAML.load(path.join(__dirname, './docs/api.yaml'))
 
 const { PORT, MONGO_CONNECTION_STRING } = require('./config/config');
@@ -59,6 +60,11 @@ server.use((req, res, next) => next(createError(NOT_FOUND)) )
 
 
 server.use(errorHandler);
+/*
+const all_routes = require('express-list-endpoints');
+console.log(all_routes(server));
+*/
+
 
 
 async function start() {
