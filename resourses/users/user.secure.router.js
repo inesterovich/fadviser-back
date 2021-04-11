@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { StatusCodes } = require('http-status-codes');
 const { OK, NO_CONTENT } = StatusCodes;
 const { checkToken, decodeToken, validateToken, userIdValidator } = require('../middleware/auth.middleware');
-const { userService } = require('./user.service');
+const userService = require('./index');
 const { _id, userUpdate } = require('../validation/schemas.validation');
 const { validator } = require('../validation/validator');
 const userSecureRouter = Router({ mergeParams: true });
@@ -31,17 +31,12 @@ res.status(OK).send(userEntity);
 
 userSecureRouter.get('/delete', async (req, res) => {
 const { userId } = req;
-await userService.del(userId);
+await userService.remove(userId);
 
 res.sendStatus(NO_CONTENT);
 });
 
 
 
-userSecureRouter.post('/test', (req, res, next) => {
-  
-  const { userId } = req;
-  res.status(OK).json( userId );
-})
 
 module.exports = userSecureRouter;

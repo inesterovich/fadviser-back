@@ -1,28 +1,53 @@
-const { createUser,
-  findUserById,
-  findUserByLogin,
-  findUserByEmail,
-  updateUser,
-  deleteUser } = require('./user.methods.db');
-const userModel = require('./user.model');
+
 const bcrypt = require('bcryptjs');
-const { AUTHENTICATION_ERROR } = require('../errors/appError');
+const { AUTHENTICATION_ERROR, NOT_FOUND_ERROR, } = require('../errors/appError');
 const jwt = require('jsonwebtoken');
 const { JWT_EXPIRE_TIME } = require('../../config/config');
+const ENTITY_NAME = 'user'
+const MONGO_ENTITY_EXISTS_ERROR_CODE = 11000;
 
 
-const register = async (userData) => await createUser(userData);
-const getById = async (userId) => await findUserById(userId);
-const getByLogin = async (login) => await findUserByLogin(login);
-const getByEmail = async (email) => await findUserByEmail(email);
-const update = async (userData) => await updateUser(userData);
-const del = async (userId) => await deleteUser(userId);
+const getById = userModel => async (id) => {
+  const user = await userModel.findOne({ _id: id });
 
+  if (!user) {
+    throw new NOT_FOUND_ERROR(ENTITY_NAME, { id });
+  }
 
-const login = async (userLogin, userPassword) => {
-  const user = await getByLogin(userLogin); 
+  return user;
+}
+const getByLogin = userModel => async (login) => {
+  const user = await userModel.findOne({ login });
 
-  const isValidPassword = bcrypt.compare(userPassword, user.password)
+  if (!user) {
+    throw new NOT_FOUND_ERROR(ENTITY_NAME, { login });
+  }
+  return user;
+}
+const getByEmail = userModel => async (email) => {
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    throw new NOT_FOUND_ERROR(ENTITY_NAME, { email });
+  }
+  return user;
+}
+
+const register = userModel => async (userData) => {
+  try {
+    return await userModel.create(userData);
+  } catch (error) {
+    if (error.code === MONGO_ENTITY_EXISTS_ERROR_CODE) {
+      throw new ENTITY_EXISTS(`${ENTITY_NAME} with this login or email already exists`)
+    } else {
+      throw error;
+    }
+  }
+  }
+
+const login = userModel => async (login, password) => {
+  const user = await userModel.findOne({ login}); 
+
+  const isValidPassword = bcrypt.compare(password, user.password)
  
   if (!isValidPassword) {
     throw new AUTHENTICATION_ERROR('Wrong password');
@@ -48,17 +73,46 @@ const login = async (userLogin, userPassword) => {
     expiredToken
   }
 }
+const update = userModel => async (userData) => {
+  const { _id } = userData;
+
+  const updateObject = {};
+
+  for (key in userData) {
+    if (key) {
+      updateObject[key] = userData[key];
+    }
+  }
+
+
+
+  return await userModel.findOneAndUpdate({ _id: _id  }, {
+    $set: updateObject
+  },
+    { new: true}
   
-const userService =   {
-  register,
-  login,
-  getById,
-  getByLogin,
-  getByEmail,
-  update,
-  del
+  )
+}
+const remove = userModel => async (id) => {
+  return await userModel.findOneAndRemove({ _id: id });
 }
 
-module.exports = {
-  userService
+
+
+
+
+module.exports = userModel => {
+  return {
+    register: register(userModel),
+    login: login(userModel),
+    getById: getById(userModel),
+    getByEmail: getByEmail(userModel),
+    getByLogin: getByLogin(userModel),
+    update: update(userModel),
+    remove: remove(userModel)
+
+
+  }
 }
+
+

@@ -1,7 +1,7 @@
 const { Router, raw } = require('express');
 const { StatusCodes } = require('http-status-codes');
 const { OK, CREATED, NO_CONTENT } = StatusCodes;
-const { userService } = require('./user.service');
+const userService = require('./index');
 const { validator } = require('../validation/validator');
 const { userCreate,  userLogin } = require('../validation/schemas.validation');
 
@@ -12,7 +12,7 @@ const AcccountsSecureRouter = require('../modules/accounting/accounts/accounts.s
 
 
 userRouter.post('/register', validator(userCreate, 'body'), async (req, res) => {
-   await userService.register(req.body);
+  await userService.register(req.body);
   return res.sendStatus(CREATED);
  });
 
