@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { StatusCodes } = require('http-status-codes');
 const { OK, NO_CONTENT } = StatusCodes;
-const { AccountService } = require('./accounts.service');
+const  AccountService = require('./index');
 const { checkToken, decodeToken, validateToken, userIdValidator } = require('../../../middleware/auth.middleware');
 const { _id, accountCreate } = require('../../../validation/schemas.validation');
 const { validator } = require('../../../validation/validator');
@@ -18,7 +18,8 @@ AcccountsSecureRouter.get('/', async (req, res) => {
   return res.status(OK).json(userAccounts);
 })
   
-AcccountsSecureRouter.post('/create', validator(accountCreate, 'body'),
+AcccountsSecureRouter.post('/create',
+  validator(accountCreate, 'body'),
   async (req, res) => {
   const { userId } = req.params;
   
@@ -40,7 +41,7 @@ AcccountsSecureRouter.post('/create', validator(accountCreate, 'body'),
   // Нужен роут на получение всех аккаунтов, на получение одного акка
 AcccountsSecureRouter.get('/:accountId/delete', async (req, res) => {
  
-  await AccountService.del(req.params.accountId);
+  await AccountService.remove(req.params.accountId);
 
   return res.sendStatus(NO_CONTENT);
 })
