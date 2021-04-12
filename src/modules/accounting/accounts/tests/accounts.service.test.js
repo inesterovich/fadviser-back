@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { ENTITY_EXISTS, NOT_FOUND_ERROR, BAD_REQUEST_ERROR } = require('../../../../errors/appError');
 const UserModel = require('../../../../users/user.model');
-const accountModel = require('../account.model');
 const AccountModel = require('../account.model');
 const accountService = require('../index');
 

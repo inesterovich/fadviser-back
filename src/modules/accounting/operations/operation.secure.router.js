@@ -1,7 +1,7 @@
 const { Router } = require('express');
-const { OperationService } = require('./operation.service');
+const OperationService = require('./index');
 const { StatusCodes } = require('http-status-codes');
-const { OK, NO_CONTENT } = StatusCodes;
+const { OK } = StatusCodes;
 const { operationCreate, operationUpdate } = require('../../../validation/schemas.validation');
 const { validator } = require('../../../validation/validator');
 
@@ -32,7 +32,7 @@ OperationSecureRouter.post('/:operationId/update',
 
 //baseURL/users/:userId/accounts/:accountId/:operationId/delete
 OperationSecureRouter.get('/:operationId/delete',  async (req, res) => {
-  const account = await OperationService.del(req.params.accountId, req.params.operationId);
+  const account = await OperationService.remove(req.params.accountId, req.params.operationId);
   // Нужна проверка на несуществующую операцию
 
 return res.status(OK).json(account);
