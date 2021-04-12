@@ -8,7 +8,6 @@ dotenv.config({
 
 module.exports = {
   PORT: process.env.PORT,
-  NODE_ENV: process.env.NODE_ENV,
   LOGS_DIR: process.env.LOGS_DIR,
   MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,

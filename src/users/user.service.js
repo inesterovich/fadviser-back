@@ -85,6 +85,7 @@ const update = userModel => async (userData) => {
   const updateObject = {};
 
   for (key in userData) {
+    /*istanbul ignore else*/
     if (key) {
       updateObject[key] = userData[key];
     }

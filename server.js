@@ -4,11 +4,11 @@ const YAML = require('yamljs');
 const winston = require('./config/logger');
 const morgan = require('morgan');
 const createError = require('http-errors');
-const errorHandler = require('./resourses/errors/errorHandler');
+const errorHandler = require('./src/errors/errorHandler');
 const { StatusCodes } = require('http-status-codes');
 const { NOT_FOUND } = StatusCodes;
 const path = require('path');
-const userRouter = require('./resourses/users/user.router');
+const userRouter = require('./src/users/user.router');
 
 
 const swaggerDocument = YAML.load(path.join(__dirname, './docs/api.yaml'))

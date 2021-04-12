@@ -50,6 +50,8 @@ UserSchema.pre('save', async function preSave(next) {
 });
 
 UserSchema.pre('findOneAndUpdate', async function preUpdate(next) {
+  
+  /*istanbul ignore else*/
   if (this._update.$set.password) {
     this._update.$set.password = await bcrypt.hash(this._update.$set.password, 10)
   }
