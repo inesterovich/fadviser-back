@@ -1,6 +1,6 @@
 
 const bcrypt = require('bcryptjs');
-const { AUTHENTICATION_ERROR, NOT_FOUND_ERROR, } = require('../errors/appError');
+const { AUTHENTICATION_ERROR, NOT_FOUND_ERROR, ENTITY_EXISTS, BAD_REQUEST_ERROR } = require('../errors/appError');
 const jwt = require('jsonwebtoken');
 const { JWT_EXPIRE_TIME } = require('../../config/config');
 const ENTITY_NAME = 'user'
@@ -24,6 +24,8 @@ const getByLogin = userModel => async (login) => {
   }
   return user;
 }
+
+// Сделать один геттер
 const getByEmail = userModel => async (email) => {
   const user = await userModel.findOne({ email });
   if (!user) {
@@ -45,9 +47,13 @@ const register = userModel => async (userData) => {
   }
 
 const login = userModel => async (login, password) => {
-  const user = await userModel.findOne({ login}); 
+  const user = await userModel.findOne({ login });
+  
+  if (!user) {
+    throw new NOT_FOUND_ERROR(`${ENTITY_NAME} not found`);
+  }
 
-  const isValidPassword = bcrypt.compare(password, user.password)
+  const isValidPassword = await bcrypt.compare(password, user.password)
  
   if (!isValidPassword) {
     throw new AUTHENTICATION_ERROR('Wrong password');
@@ -61,20 +67,20 @@ const login = userModel => async (login, password) => {
     { expiresIn: JWT_EXPIRE_TIME }
   );
 
-  const expiredToken = jwt.sign(
-    { userId: user._id,},
-    jwtSecretKey,
-    {expiresIn: '10s'}
-    
-  )
+
 
   return {
-    token,
-    expiredToken
+    _id: user._id,
+    token
+    
   }
 }
 const update = userModel => async (userData) => {
   const { _id } = userData;
+
+  if (!_id) {
+    throw new BAD_REQUEST_ERROR('_id is neccessary for this operation')
+  }
 
   const updateObject = {};
 
@@ -84,14 +90,18 @@ const update = userModel => async (userData) => {
     }
   }
 
-
-
-  return await userModel.findOneAndUpdate({ _id: _id  }, {
+  const user = await userModel.findOneAndUpdate({ _id: _id  }, {
     $set: updateObject
   },
     { new: true}
   
   )
+
+  if (!user) {
+    throw new NOT_FOUND_ERROR(`${ENTITY_NAME} is not exists`);
+  } 
+
+  return user;
 }
 const remove = userModel => async (id) => {
   return await userModel.findOneAndRemove({ _id: id });

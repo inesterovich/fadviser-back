@@ -3,7 +3,7 @@ const path = require('path');
 
 dotenv.config({
   path: path.join(__dirname, '../.env'),
-  debug: true,
+  debug: false,
 });
 
 module.exports = {

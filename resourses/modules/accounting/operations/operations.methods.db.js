@@ -24,9 +24,6 @@ const addOperation = async (accountId, operationData) => {
 
 const updateOperation = async (accountId, operationData) => {
   try {
-
-  
-    
     const account = await AccountModel.findOneAndUpdate({
       _id: accountId,
       'operations._id': operationData._id
