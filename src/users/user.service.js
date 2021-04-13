@@ -5,10 +5,11 @@ const jwt = require('jsonwebtoken');
 const { JWT_EXPIRE_TIME } = require('../../config/config');
 const ENTITY_NAME = 'user'
 const MONGO_ENTITY_EXISTS_ERROR_CODE = 11000;
+const AccountModel = require('../modules/accounting/accounts/account.model');
 
 
-const getById = userModel => async (id) => {
-  const user = await userModel.findOne({ _id: id });
+const getById = UserModel => async (id) => {
+  const user = await UserModel.findOne({ _id: id });
 
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { id });
@@ -16,8 +17,8 @@ const getById = userModel => async (id) => {
 
   return user;
 }
-const getByLogin = userModel => async (login) => {
-  const user = await userModel.findOne({ login });
+const getByLogin = UserModel => async (login) => {
+  const user = await UserModel.findOne({ login });
 
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { login });
@@ -26,17 +27,17 @@ const getByLogin = userModel => async (login) => {
 }
 
 // Сделать один геттер
-const getByEmail = userModel => async (email) => {
-  const user = await userModel.findOne({ email });
+const getByEmail = UserModel => async (email) => {
+  const user = await UserModel.findOne({ email });
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { email });
   }
   return user;
 }
 
-const register = userModel => async (userData) => {
+const register = UserModel => async (userData) => {
   try {
-    return await userModel.create(userData);
+    return await UserModel.create(userData);
   } catch (error) {
     if (error.code === MONGO_ENTITY_EXISTS_ERROR_CODE) {
       throw new ENTITY_EXISTS(`${ENTITY_NAME} with this login or email already exists`)
@@ -46,8 +47,8 @@ const register = userModel => async (userData) => {
   }
   }
 
-const login = userModel => async (login, password) => {
-  const user = await userModel.findOne({ login });
+const login = UserModel => async (login, password) => {
+  const user = await UserModel.findOne({ login });
   
   if (!user) {
     throw new NOT_FOUND_ERROR(`${ENTITY_NAME} not found`);
@@ -75,7 +76,7 @@ const login = userModel => async (login, password) => {
     
   }
 }
-const update = userModel => async (userData) => {
+const update = UserModel => async (userData) => {
   const { _id } = userData;
 
   if (!_id) {
@@ -91,7 +92,7 @@ const update = userModel => async (userData) => {
     }
   }
 
-  const user = await userModel.findOneAndUpdate({ _id: _id  }, {
+  const user = await UserModel.findOneAndUpdate({ _id: _id  }, {
     $set: updateObject
   },
     { new: true}
@@ -104,23 +105,25 @@ const update = userModel => async (userData) => {
 
   return user;
 }
-const remove = userModel => async (id) => {
-  return await userModel.findOneAndRemove({ _id: id });
+const remove = UserModel => async (id) => {
+  await UserModel.findOneAndRemove({ _id: id });
+  await AccountModel.deleteMany({ owner: id });
+  return;
 }
 
 
 
 
 
-module.exports = userModel => {
+module.exports = UserModel => {
   return {
-    register: register(userModel),
-    login: login(userModel),
-    getById: getById(userModel),
-    getByEmail: getByEmail(userModel),
-    getByLogin: getByLogin(userModel),
-    update: update(userModel),
-    remove: remove(userModel)
+    register: register(UserModel),
+    login: login(UserModel),
+    getById: getById(UserModel),
+    getByEmail: getByEmail(UserModel),
+    getByLogin: getByLogin(UserModel),
+    update: update(UserModel),
+    remove: remove(UserModel)
 
 
   }

@@ -1,4 +1,4 @@
 const UserModel = require('./user.model');
-const userService = require('./user.service');
+const UserService = require('./user.service');
 
-module.exports = userService(UserModel);
+module.exports = UserService(UserModel);

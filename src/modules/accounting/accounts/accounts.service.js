@@ -3,6 +3,9 @@ const MONGO_ENTITY_EXISTS_ERROR_CODE = 11000;
 const ENTITY_NAME = 'Account';
 
 const get = AccountModel => async (accountId) => {
+
+
+  if (!accountId) throw new BAD_REQUEST_ERROR('accountId is missing')
   const account = await AccountModel.findOne({ _id: accountId })
  
   if (!account) {
@@ -12,6 +15,7 @@ const get = AccountModel => async (accountId) => {
   return account;
 };
 const getAll = AccountModel => async (userId) => {
+  if (!userId) throw new BAD_REQUEST_ERROR('userId is missing');
   const accounts = await AccountModel.find({ owner: userId });
   if (!accounts.length) {
     throw new NOT_FOUND_ERROR(`This data not found`)
@@ -22,6 +26,8 @@ const getAll = AccountModel => async (userId) => {
 
 const create = AccountModel => async (accountData, userId) => {
   try {
+    if (!accountData || !userId) throw new BAD_REQUEST_ERROR('accountData and userId are required')
+    
     const initialOperation = {
       date: new Date(),
       category: `Создание счёта ${accountData.name}`,
@@ -46,29 +52,31 @@ const create = AccountModel => async (accountData, userId) => {
   }
 }
 
-const update = AccountModel =>  async (accountId, accountName) => {
-  const account = await AccountModel.findOneAndUpdate(
-    {
-    _id: accountId
-    },
-    { name: accountName },
-    { new: true }
-  );
+const update = AccountModel => async (accountId, accountName) => {
+  
+    if (!accountId || !accountName) throw new BAD_REQUEST_ERROR('accountId and accountName are required')
 
-  return account;
+    const account = await AccountModel.findOneAndUpdate(
+      {
+      _id: accountId
+      },
+      { name: accountName },
+      { new: true }
+    );
+  
+    return account;
+
+  
+ 
 }
 
 const remove = AccountModel => async (accountId) => {
-  try {
-
     if (!accountId) {
       throw new BAD_REQUEST_ERROR('accountId is required')
     }
    return await AccountModel.findOneAndRemove({ _id: accountId });
 
-  } catch (error) {
-    throw error;
-  }
+  
 }
 
 

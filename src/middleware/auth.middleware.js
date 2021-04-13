@@ -3,7 +3,7 @@ const { AUTHORIZATION_ERROR } = require('../errors/appError');
 const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 const { FORBIDDEN } = StatusCodes;
-const { userService } = require('../users/user.service');
+const UserService = require('../users/tests');
 
 
 const checkToken = (req, res, next) => {
@@ -46,7 +46,7 @@ const userIdValidator = (req, res, next) => {
 const validateToken = async (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
 
-  const user = await userService.getById(req.userId);
+  const user = await UserService.getById(req.userId);
   const secretKey = user.userSecret;
 
   try {

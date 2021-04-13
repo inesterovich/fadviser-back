@@ -10,7 +10,8 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "test": "jest --runInBand",
-    "test:accounts": "jest src/modules/accounting/accounts/tests/accounts.service.test.js"
+    "test:users": "jest --runInBand src/users/tests/user.service.test.js",
+    "test:accounts": "jest --runInBand src/modules/accounting/accounts/tests/accounts.service.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

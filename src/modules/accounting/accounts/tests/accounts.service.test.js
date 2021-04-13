@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { ENTITY_EXISTS, NOT_FOUND_ERROR, BAD_REQUEST_ERROR } = require('../../../../errors/appError');
 const UserModel = require('../../../../users/user.model');
 const AccountModel = require('../account.model');
-const accountService = require('../index');
+const AccountService = require('../index');
 
 
 const mongoTestString = 'mongodb://127.0.0.1/fadviser_test';
@@ -35,7 +35,7 @@ describe('AccountService:', () => {
   /* Перед каждым тестом мне всегда нужен готовый юзер */
   it('to be defined', () => {
 
-    expect(accountService).toBeDefined();
+    expect(AccountService).toBeDefined();
   });
   let userMockData = {
     login: 'developer',
@@ -62,14 +62,14 @@ describe('AccountService:', () => {
     })
 
     it('to be defined', () => {
-      expect(accountService.getAll).toBeDefined();
+      expect(AccountService.getAll).toBeDefined();
     })
 
     it('gets account correctly', async () => {
       accountMockData.owner = user._id;
-      const account = await accountModel.create(accountMockData);
+      const account = await AccountModel.create(accountMockData);
 
-      const actualAccount = await accountService.get(account._id);
+      const actualAccount = await AccountService.get(account._id);
 
       expect(actualAccount._id).toEqual(account._id);
      
@@ -77,8 +77,12 @@ describe('AccountService:', () => {
     })
 
     it('throws NOT_FOUND_ERROR', async () => {
-      await expect(accountService.get(fakeAccountId))
+      await expect(AccountService.get(fakeAccountId))
         .rejects.toThrowError(NOT_FOUND_ERROR);
+    })
+
+    it('throws BAD_REQUEST error', async () => {
+      await expect(AccountService.get()).rejects.toThrowError(BAD_REQUEST_ERROR);
     })
   });
 
@@ -94,27 +98,31 @@ describe('AccountService:', () => {
     })
 
     it('to be defined', () => {
-      expect(accountService.getAll).toBeDefined();
+      expect(AccountService.getAll).toBeDefined();
     })
 
     it('gets All accounts correctly', async () => {
 
       accountMockData.owner = user._id;
-      await accountModel.create(accountMockData);
+      await AccountModel.create(accountMockData);
       const fakeAccountMock = {
         name: 'Test 2',
         owner: user._id
       }
 
-      await accountModel.create(fakeAccountMock);
+      await AccountModel.create(fakeAccountMock);
 
-      const accounts = await accountService.getAll(user._id);
+      const accounts = await AccountService.getAll(user._id);
       expect(accounts.length).toBe(2);
 
     })
 
     it('throws NOT_FOUND_ERROR', async () => {
-      await expect(accountService.getAll(user._id)).rejects.toThrowError(NOT_FOUND_ERROR);
+      await expect(AccountService.getAll(user._id)).rejects.toThrowError(NOT_FOUND_ERROR);
+    });
+
+    it('throws BAD_REQUEST error', async () => {
+      await expect(AccountService.getAll()).rejects.toThrowError(BAD_REQUEST_ERROR);
     })
   })
 
@@ -131,22 +139,42 @@ describe('AccountService:', () => {
 
 
     it('to be defined', () => {
-      expect(accountService.create).toBeDefined();
+      expect(AccountService.create).toBeDefined();
     })
 
     it('creates account successfully', async () => {
-      const account = await accountService.create(accountMockData, user._id);
+      const account = await AccountService.create(accountMockData, user._id);
       expect(account.name).toBe(accountMockData.name);
-    })
-
-    it('catches ENTITY_EXISTS error', async () => {
-      await accountService.create(accountMockData, user._id);
-      await expect(accountService.create(accountMockData, user._id)).rejects.toThrowError(ENTITY_EXISTS)
     });
 
-    it('catched other error', async () => {
-      await expect(accountService.create(accountMockData)).rejects.toThrow();
+    it('creates account with one operation', async () => {
+      const account = await AccountService.create(accountMockData, user._id);
+      expect(account.operations.length).toBe(1);
+    });
+
+    it('creates account with not-a-null sum', async () => {
+      const accountExtended = {
+        ...accountMockData,
+        sum: 523
+      }
+
+      const account = await AccountService.create(accountExtended, user._id);
+      expect(account.sum).toEqual(accountExtended.sum);
+      expect(account.operations[0].sum).toEqual(accountExtended.sum);
     })
+
+    it('throws ENTITY_EXISTS error', async () => {
+      await AccountService.create(accountMockData, user._id);
+      await expect(AccountService.create(accountMockData, user._id)).rejects.toThrowError(ENTITY_EXISTS)
+    });
+
+    it('throws BAD_REQUEST error', async () => {
+      await expect(AccountService.create()).rejects.toThrowError(BAD_REQUEST_ERROR);
+    })
+
+    it('throws other errors', async () => {
+      await expect(AccountService.create(accountMockData)).rejects.toThrow();
+    });
 
 
   })
@@ -165,17 +193,21 @@ describe('AccountService:', () => {
     })
 
     it('to be defined', () => {
-      expect(accountService.update).toBeDefined();
+      expect(AccountService.update).toBeDefined();
     })
 
     it('update account succesfully', async () => {
       accountMockData.owner = user._id;
-      const account = await accountModel.create(accountMockData);
+      const account = await AccountModel.create(accountMockData);
       const updatedName = 'Updated Name'
     
 
-      const updateAccount = await accountService.update(account._id, updatedName);
+      const updateAccount = await AccountService.update(account._id, updatedName);
       expect(updateAccount.name).toBe(updatedName);
+    })
+
+    it('throws BAD_REQUEST error', async () => {
+      await expect(AccountService.update()).rejects.toThrowError(BAD_REQUEST_ERROR);
     })
   })
 
@@ -193,16 +225,16 @@ describe('AccountService:', () => {
     })
 
     it('to be defined', () => {
-      expect(accountService.remove).toBeDefined();
+      expect(AccountService.remove).toBeDefined();
     });
 
     it('removes account correctly', async () => {
       accountMockData.owner = user._id;
-      const account = await accountModel.create(accountMockData);
+      const account = await AccountModel.create(accountMockData);
 
-      await accountService.remove(account._id);
+      await AccountService.remove(account._id);
 
-      const expected = await accountModel.findOne({ id: account._id});
+      const expected = await AccountModel.findOne({ id: account._id});
 
       expect(expected).toBeFalsy();
     })
@@ -210,7 +242,7 @@ describe('AccountService:', () => {
     it('throw BAD_REQUEST error if accointId is not passed', async () => {
       accountMockData.owner = user._id;
 
-      await expect(accountService.remove()).rejects.toThrowError(BAD_REQUEST_ERROR);
+      await expect(AccountService.remove()).rejects.toThrowError(BAD_REQUEST_ERROR);
 
     
     })

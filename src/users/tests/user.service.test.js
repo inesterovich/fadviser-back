@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const userService = require('../index');
+const UserService = require('../index');
 const UserModel = require('../user.model');
 const { ENTITY_EXISTS, AUTHENTICATION_ERROR, BAD_REQUEST_ERROR, NOT_FOUND_ERROR } = require('../../errors/appError');
-const userModel = require('../user.model');
+const AccountModel = require('../../modules/accounting/accounts/account.model');
 
 const mongoTestString = 'mongodb://127.0.0.1/fadviser_test';
 const mongoConfig = {
@@ -31,7 +31,7 @@ describe('UserService:', () => {
   })
   
   it('module exist', () => {
-    expect(userService).toBeDefined();
+    expect(UserService).toBeDefined();
   });
 
 
@@ -48,29 +48,29 @@ describe('UserService:', () => {
     let userId;
     
     beforeEach(async () => {
-      await userModel.create(userMockData);
-      user = await userModel.findOne({ login: userMockData.login });
+      await UserModel.create(userMockData);
+      user = await UserModel.findOne({ login: userMockData.login });
       userId = user._id;
     });
 
     afterEach(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
     })
 
     afterAll(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
     })
 
     it('to be defined', () => {
-      expect(userService.getById).toBeDefined();
-      expect(userService.getByEmail).toBeDefined();
-      expect(userService.getByLogin).toBeDefined();
+      expect(UserService.getById).toBeDefined();
+      expect(UserService.getByEmail).toBeDefined();
+      expect(UserService.getByLogin).toBeDefined();
     })
 
     it('getters works properly', async () => {
-      const userById = await userService.getById(user._id);
-      const userByEmail = await userService.getByEmail(user.email);
-      const userByLogin = await userService.getByLogin(user.login);
+      const userById = await UserService.getById(user._id);
+      const userByEmail = await UserService.getByEmail(user.email);
+      const userByLogin = await UserService.getByLogin(user.login);
       expect(userById).toBeDefined();
       expect(userByEmail).toBeDefined();
       expect(userByLogin).toBeDefined();
@@ -81,9 +81,9 @@ describe('UserService:', () => {
       const fakeEmail = 'fakery@fake.ru';
       const fakeLogin = 'FakeLogin';
 
-      await expect(userService.getById(fakeUserId)).rejects.toThrowError(NOT_FOUND_ERROR);
-      await expect(userService.getByEmail(fakeEmail)).rejects.toThrowError(NOT_FOUND_ERROR);
-      await expect(userService.getByLogin(fakeLogin)).rejects.toThrowError(NOT_FOUND_ERROR);
+      await expect(UserService.getById(fakeUserId)).rejects.toThrowError(NOT_FOUND_ERROR);
+      await expect(UserService.getByEmail(fakeEmail)).rejects.toThrowError(NOT_FOUND_ERROR);
+      await expect(UserService.getByLogin(fakeLogin)).rejects.toThrowError(NOT_FOUND_ERROR);
      
     })
 
@@ -97,7 +97,7 @@ describe('UserService:', () => {
     
     it('to be defined', () => {
       
-      expect(userService.register).toBeDefined()
+      expect(UserService.register).toBeDefined()
       
     })
 
@@ -108,7 +108,7 @@ describe('UserService:', () => {
         password: '123456'
       }
 
-      const user = await userService.register(userMockData);
+      const user = await UserService.register(userMockData);
 
       expect(user.login).toEqual(userMockData.login);
 
@@ -121,7 +121,7 @@ describe('UserService:', () => {
         password: '123456'
       }
 
-      const user = await userService.register(userMockData);
+      const user = await UserService.register(userMockData);
       expect(user.password).not.toEqual(userMockData.password);
 
     });
@@ -141,8 +141,8 @@ describe('UserService:', () => {
         password: '123456'
       };
 
-      await userService.register(userFirst);
-      await expect(userService.register(userSecond)).rejects.toThrowError(ENTITY_EXISTS);
+      await UserService.register(userFirst);
+      await expect(UserService.register(userSecond)).rejects.toThrowError(ENTITY_EXISTS);
 
 
   
@@ -155,7 +155,7 @@ describe('UserService:', () => {
         password: '123456'
       };
 
-      await expect(userService.register(userWithoutLogin)).rejects.toThrow();
+      await expect(UserService.register(userWithoutLogin)).rejects.toThrow();
 
 
     })
@@ -179,42 +179,42 @@ describe('UserService:', () => {
     let userId;
     
     beforeEach(async () => {
-      await userModel.create(userMockData);
-      user = await userModel.findOne({ login: userMockData.login });
+      await UserModel.create(userMockData);
+      user = await UserModel.findOne({ login: userMockData.login });
       userId = user._id;
     });
 
     afterEach(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
     })
 
     afterAll(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
     })
 
     it('to be defined', () => {
-      expect(userService.login).toBeDefined();
+      expect(UserService.login).toBeDefined();
     })
 
     it('get token successfully', async () => {
 
-      const data = await userService.login(userMockData.login, userMockData.password);
+      const data = await UserService.login(userMockData.login, userMockData.password);
 
       expect(data.token).toBeDefined();
     })
 
     it('get userId successfully', async () => {
-      const data = await userService.login(userMockData.login, userMockData.password);
+      const data = await UserService.login(userMockData.login, userMockData.password);
 
       expect(data._id).toBeDefined();
     })
 
     it('throws authentication error with bad credentials', async () => {
-       await expect(userService.login(userMockData.login, 'wrongpassword')).rejects.toThrowError(AUTHENTICATION_ERROR);
+       await expect(UserService.login(userMockData.login, 'wrongpassword')).rejects.toThrowError(AUTHENTICATION_ERROR);
     })
 
     it('throws not found error with unregistered user', async () => {
-      await expect(userService.login('fakeLogin', userMockData.password)).rejects.toThrowError(NOT_FOUND_ERROR);
+      await expect(UserService.login('fakeLogin', userMockData.password)).rejects.toThrowError(NOT_FOUND_ERROR);
     })
 
   })
@@ -230,17 +230,17 @@ describe('UserService:', () => {
     let userId;
     
     beforeEach(async () => {
-      await userModel.create(userMockData);
-      user = await userModel.findOne({ login: userMockData.login });
+      await UserModel.create(userMockData);
+      user = await UserModel.findOne({ login: userMockData.login });
       userId = user._id;
     });
 
     afterEach(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
     })
 
     afterAll(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
     })
 
     it('Updated user correctly', async () => {
@@ -252,7 +252,7 @@ describe('UserService:', () => {
 
       userUpdate._id = userId;
 
-      const user = await userService.update(userUpdate);
+      const user = await UserService.update(userUpdate);
 
       expect(user.email).toEqual(userUpdate.email);
 
@@ -270,7 +270,7 @@ describe('UserService:', () => {
 
       userUpdate._id = userId;
 
-      const user = await userService.update(userUpdate);
+      const user = await UserService.update(userUpdate);
 
       expect(user._id).toBeDefined();
     })
@@ -284,7 +284,7 @@ describe('UserService:', () => {
 
       userUpdate._id = userId;
 
-      const user = await userService.update(userUpdate);
+      const user = await UserService.update(userUpdate);
 
       expect(user.password).not.toEqual(userUpdate.password);
     })
@@ -296,7 +296,7 @@ describe('UserService:', () => {
         password: '1234567890'
       };
 
-      await expect(userService.update(userUpdate)).rejects.toThrowError(BAD_REQUEST_ERROR);
+      await expect(UserService.update(userUpdate)).rejects.toThrowError(BAD_REQUEST_ERROR);
       
     })
 
@@ -309,19 +309,19 @@ describe('UserService:', () => {
 
       userUpdate._id = '4edd40c86762e0fb12000003';
       
-      await expect(userService.update(userUpdate)).rejects.toThrow();
+      await expect(UserService.update(userUpdate)).rejects.toThrow();
     })
 
 
     it('User collection after error is not changed', async () => {
       const fakeUserId = mongoose.Types.ObjectId('4edd40c86762e0fb12000003') ;
       try {
-       await userService.getById(fakeUserId)
+       await UserService.getById(fakeUserId)
       } catch (error) {
        
       }
 
-      const userCollection = await userModel.find({});
+      const userCollection = await UserModel.find({});
       expect(userCollection.length).toEqual(1);
 
     
@@ -340,32 +340,46 @@ describe('UserService:', () => {
     let userId;
     
     beforeEach(async () => {
-      await userModel.create(userMockData);
-      user = await userModel.findOne({ login: userMockData.login });
+      await AccountModel.deleteMany();
+      await UserModel.create(userMockData);
+      user = await UserModel.findOne({ login: userMockData.login });
       userId = user._id;
     });
 
     afterEach(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
+      await AccountModel.deleteMany();
     })
 
     afterAll(async () => {
-      await userModel.deleteMany();
+      await UserModel.deleteMany();
     })
 
     it('to be defined', () => {
-      expect(userService.remove).toBeDefined()
+      expect(UserService.remove).toBeDefined()
     })
 
     it('deletes user properly', async () => {
-      await userService.remove(userId);
+      await UserService.remove(userId);
       const userCollection = await UserModel.find({});
       expect(userCollection.length).toEqual(0);
     });
 
+    it('deletes other modules properly', async () => {
+      const accountMock = {
+        name: 'Test Account',
+        owner: userId,
+        sum: 500
+      }
+      await AccountModel.create(accountMock);
+      await UserService.remove(userId);
+      const accounts = await AccountModel.find({ owner: userId });
+      expect(accounts.length).toEqual(0);
+    })
+
     it('does not change collection with bad _id', async () => {
       const fakeUserId = mongoose.Types.ObjectId('4edd40c86762e0fb12000003') ;
-      await userService.remove(fakeUserId);
+      await UserService.remove(fakeUserId);
 
       const userCollection = await UserModel.find({});
       expect(userCollection.length).toEqual(1);
