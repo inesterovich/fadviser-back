@@ -10,6 +10,8 @@ const { NOT_FOUND } = StatusCodes;
 const path = require('path');
 const userRouter = require('./src/users/user.router');
 
+const start = require('./start');
+
 
 const swaggerDocument = YAML.load(path.join(__dirname, './docs/api.yaml'))
 
@@ -18,6 +20,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const express = require('express');
 const helmet = require('helmet');
+const { loggers } = require('winston');
 const server = express();
 
 
@@ -66,25 +69,35 @@ console.log(all_routes(server));
 */
 
 
+const loggerInfo = (port) => {
+  return {
+    dbInfo() {
+      return winston.info('Successfully connect to database')
+    },
 
-async function start() {
-  try {
-    await mongoose.connect(MONGO_CONNECTION_STRING, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false
-    });
+    serverInfo() {
+      return winston.info(`Server is running on PORT ${port}`)
+    },
 
-    winston.info('Successfully connect to database');
-    server.listen(PORT, () => winston.info(`Server is running on PORT ${PORT}`))
-  } catch (error) {
-    winston.error(`MongoDB Connection error: ${error.message}`)
+    errorInfo(error) {
+      return winston.error(`MongoDB Connection error: ${error.message}`)
+    }
+
   }
-
 }
 
-start();
+const mongoConfig = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+};
+
+
+
+start(MONGO_CONNECTION_STRING,
+  
+  mongoConfig, PORT, loggerInfo, server);
 
 
 process.on('unhandledRejection', reason => {

@@ -3,7 +3,7 @@ const { AUTHORIZATION_ERROR } = require('../errors/appError');
 const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 const { FORBIDDEN } = StatusCodes;
-const UserService = require('../users/tests');
+const UserService = require('../users/index');
 
 
 const checkToken = (req, res, next) => {
