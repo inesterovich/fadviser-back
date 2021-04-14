@@ -11,7 +11,8 @@
     "server": "nodemon server.js",
     "test": "jest --runInBand",
     "test:users": "jest --runInBand src/users/tests/user.service.test.js",
-    "test:accounts": "jest --runInBand src/modules/accounting/accounts/tests/accounts.service.test.js"
+    "test:accounts": "jest --runInBand src/modules/accounting/accounts/tests",
+    "test:operations": "jest --runInBand src/modules/accounting/operations/tests"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

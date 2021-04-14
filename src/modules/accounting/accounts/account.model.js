@@ -49,10 +49,12 @@ AccountSchema.methods.sortOperations = function () {
 
 AccountSchema.methods.updateSum = function () {
   
-  this.sum = this.operations.map((item) => item = item.sum).reduce((sum, current) => sum + current, 0);
+  const updatedSum = this.operations.map((item) => item = Number(item.sum)).reduce((sum, current) => sum + current, 0);
+
+  this.sum = Number(updatedSum.toFixed(2));
 }
 
-AccountSchema.methods.updateDate = function (editedOperaation) {
+AccountSchema.methods.updateDate = function (editedOperation) {
 
    
   if (this.operations.length > 1) {
@@ -61,13 +63,16 @@ AccountSchema.methods.updateDate = function (editedOperaation) {
     
       if (this.operations[0].date >= this.operations[1].date) {
         
+        if (String(editedOperation?._id) === String(this.operations[0]._id)) {
+  
+          throw new  BAD_REQUEST_ERROR('Операция запрещена: дата создания счёта не может быть больше следующей операции.')
+      } 
+
+
           this.operations[0].date = new Date(this.operations[1].date - 1)
           
           
-              if (String(editedOperaation._id) === String(this.operations[0]._id)) {
-  
-                  throw new Error('Операция запрещена: дата создания счёта не может быть больше следующей операции.')
-              } 
+             
   
               
           }

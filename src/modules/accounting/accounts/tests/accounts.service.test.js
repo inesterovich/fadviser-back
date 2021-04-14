@@ -46,6 +46,7 @@ describe('AccountService:', () => {
     name: 'Test account'
   };
 
+
   let user;
   let userId;
 
