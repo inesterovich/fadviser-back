@@ -23,13 +23,14 @@ components:
           type: string
         avatar:
           type: string
-    Tokens:
+    AuthData:
       type: object
       properties:
         token: 
           type: string
-        expiredToken:
+        _id:
           type: string
+          format: objectId
     Operation:
       type: object
       properties:
@@ -119,8 +120,6 @@ paths:
           $ref: '#/components/responses/BadRequestError'
         417: 
           description: User already exists
-        500:
-          $ref: '#/components/responses/InternalServerError'
   /users/login:
     post:
       tags:
@@ -152,11 +151,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Tokens"
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        422:
-          description: Invalid login or password
+                $ref: "#/components/schemas/AuthData"
+        403:
+          $ref: '#/components/responses/UnauthenticatedError'
   /users/{userId}:
     parameters:
       - name: userId
@@ -177,6 +174,8 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -219,6 +218,8 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -239,10 +240,10 @@ paths:
       responses:
         204:
           description: Successful operation. User is not existed anymore
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: User not found
   /users/{userId}/accounts:
     parameters:
       - name: userId
@@ -265,6 +266,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Account"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
         404:
@@ -295,8 +298,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: "Account not found"
   /users/{userId}/accounts/create:
     parameters:
       - name: userId
@@ -332,8 +339,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
+        417:
+          description: "Account with this name already exists"
   /users/{userId}/accounts/{accountId}/delete:
     parameters:
       - name: userId
@@ -356,6 +367,8 @@ paths:
       responses:
         204:
           description: Successful operation. Account is not existed anymore
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /users/{userId}/accounts/{accountId}/add:
@@ -399,12 +412,14 @@ paths:
                 sum:
                   type: number
       responses:
-        201:
+        200:
           description: Operation added successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /users/{userId}/accounts/{accountId}/{operationId}/update:
@@ -459,12 +474,14 @@ paths:
                 sum:
                   type: number
       responses:
-        201:
+        200:
           description: Operation updated successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'
   /users/{userId}/accounts/{accountId}/{operationId}/delete:
@@ -493,11 +510,13 @@ paths:
       summary: Update operation in userAccount
       description: Update operation in userAccount
       responses:
-        204:
+        200:
           description: Operation deleted successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
+        400:
+          $ref: "#/components/responses/BadRequestError"
         401:
           $ref: '#/components/responses/UnauthorizedError'

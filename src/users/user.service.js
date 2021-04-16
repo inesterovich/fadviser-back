@@ -27,7 +27,6 @@ const getByLogin = (UserModel) => async (login) => {
   return user;
 };
 
-// Сделать один геттер
 const getByEmail = (UserModel) => async (email) => {
   const user = await UserModel.findOne({ email });
   if (!user) {
@@ -58,7 +57,7 @@ const login = (UserModel) => async (userLogin, userPassword) => {
   const isValidPassword = await bcrypt.compare(userPassword, user.password);
 
   if (!isValidPassword) {
-    throw new AUTHENTICATION_ERROR('Wrong password');
+    throw new AUTHENTICATION_ERROR('Wrong login or password');
   }
 
   const jwtSecretKey = user.userSecret;

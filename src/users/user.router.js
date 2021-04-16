@@ -18,10 +18,9 @@ userRouter.post('/register', validator(userCreate, 'body'), async (req, res) => 
 
 userRouter.post('/login', validator(userLogin, 'body'), async (req, res) => {
   const { login, password } = req.body;
+  const authData = await UserService.login(login, password);
 
-  const userTokens = await UserService.login(login, password);
-
-  return res.status(OK).json(userTokens);
+  return res.status(OK).json(authData);
 });
 
 userRouter.use('/:userId', userSecureRouter);

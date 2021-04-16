@@ -36,7 +36,6 @@ AcccountsSecureRouter.get('/:accountId/', async (req, res) => {
   res.status(OK).json(account);
 });
 
-// Нужен роут на получение всех аккаунтов, на получение одного акка
 AcccountsSecureRouter.get('/:accountId/delete', async (req, res) => {
   await AccountService.remove(req.params.accountId);
 
