@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { ENTITY_EXISTS, NOT_FOUND_ERROR, BAD_REQUEST_ERROR } = require('../../../../errors/appError');
-const UserModel = require('../../../../users/user.model');
-const AccountModel = require('../account.model');
-const AccountService = require('../index');
+const { ENTITY_EXISTS, NOT_FOUND_ERROR, BAD_REQUEST_ERROR } = require('../../errors/appError');
+const UserModel = require('../../users/user.model');
+const AccountModel = require('../../modules/accounting/accounts/account.model');
+const AccountService = require('../../modules/accounting/accounts/index');
 
 
 const mongoTestString = 'mongodb://127.0.0.1/fadviser_test';

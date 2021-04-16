@@ -10,15 +10,9 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "test": "jest --runInBand",
-    "test:users": "jest --runInBand src/users/tests/user.service.test.js",
-    "test:accounts": "jest --runInBand src/modules/accounting/accounts/tests",
-    "test:operations": "jest --runInBand src/modules/accounting/operations/tests",
-    "test:appRouter": "jest --runInBand src/tests/app.router.test.js",
-    "test:userRouter": "jest --runInBand src/tests/user.router.test.js",
-    "test:userSecureRouter": "jest --runInBand src/tests/user.secure.router.test.js",
-    "test:accountSecureRouter": "jest --runInBand src/tests/account.secure.router.test.js",
-    "test:operationSecureRouter": "jest --runInBand src/tests/operation.secure.router.test.js",
-    "test:authMiddleware": "jest --runInBand src/tests/middleware/auth.middleware.test.js"
+    "test:service": "jest --runInBand src/tests/service",
+    "test:routes": "jest --runInBand src/tests/routes",
+    "test:middleware": "jest --runInBand src/tests/middleware"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

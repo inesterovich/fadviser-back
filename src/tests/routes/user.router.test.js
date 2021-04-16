@@ -1,8 +1,8 @@
-const app = require('../../app');
-const { ENTITY_EXISTS, AUTHENTICATION_ERROR } = require('../errors/appError');
-const UserModel = require('../users/user.model');
+const app = require('../../../app');
+const { ENTITY_EXISTS, AUTHENTICATION_ERROR } = require('../../errors/appError');
+const UserModel = require('../../users/user.model');
 const randomString = require('randomstring');
-const UserService = require('../users/index');
+const UserService = require('../../users/index');
 const request = require('supertest');
 
 const { StatusCodes } = require('http-status-codes');

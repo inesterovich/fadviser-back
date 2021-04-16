@@ -1,8 +1,8 @@
 
-const UserRouter = require('../users/user.router');
-const UserSecureRouter = require('../users/user.secure.router');
-const AccountSecureRouter = require('../modules/accounting/accounts/accounts.secure.router');
-const OperationSecureRouter = require('../modules/accounting/operations/operation.secure.router');
+const UserRouter = require('../../users/user.router');
+const UserSecureRouter = require('../../users/user.secure.router');
+const AccountSecureRouter = require('../../modules/accounting/accounts/accounts.secure.router');
+const OperationSecureRouter = require('../../modules/accounting/operations/operation.secure.router');
 
 
 describe('App:', () => {

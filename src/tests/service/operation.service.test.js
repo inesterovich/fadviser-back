@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const { BAD_REQUEST_ERROR } = require('../../../../errors/appError');
-const AccountModel = require('../../../../modules/accounting/accounts/account.model');
-const AccountService = require('../../accounts/index');
-const OperationService = require('../index');
-const UserModel = require('../../../../users/user.model');
+const { BAD_REQUEST_ERROR } = require('../../errors/appError');
+const AccountModel = require('../../modules/accounting/accounts/account.model');
+const AccountService = require('../../modules/accounting/accounts/index');
+const OperationService = require('../../modules/accounting/operations/index');
+const UserModel = require('../../users/user.model');
 
 const mongoTestString = 'mongodb://127.0.0.1/fadviser_test';
 const mongoConfig = {

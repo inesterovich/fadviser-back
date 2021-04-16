@@ -1,6 +1,6 @@
 const request = require('supertest');
-const AuthMiddleware = require('../middleware/auth.middleware');
-const OperationService = require('../modules/accounting/operations/index');
+const AuthMiddleware = require('../../middleware/auth.middleware');
+const OperationService = require('../../modules/accounting/operations/index');
 const { StatusCodes } = require('http-status-codes');
 const { OK } = StatusCodes;
 
@@ -32,7 +32,7 @@ describe ('OperationSecureRouter', () => {
    spyedUserIdValidator = jest.spyOn(AuthMiddleware, 'userIdValidator').mockImplementation((req, res, next) => next());
    spyedValidateToken = jest.spyOn(AuthMiddleware, 'validateToken').mockImplementation((req, res, next) => next());
    
-   app = require('../../app');
+   app = require('../../../app');
 
    server = app.listen(3001);
  })

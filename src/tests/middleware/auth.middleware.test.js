@@ -18,7 +18,7 @@ describe('AuthMiddleware', () => {
       { userId },
       secret,
       { expiresIn: '4h' }
-    );;
+    );
   })
 
 

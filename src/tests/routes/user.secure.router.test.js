@@ -1,6 +1,6 @@
 const request = require('supertest');
-const AuthMiddleware = require('../middleware/auth.middleware');
-const UserService = require('../users/index');
+const AuthMiddleware = require('../../middleware/auth.middleware');
+const UserService = require('../../users/index');
 
 
 const { StatusCodes } = require('http-status-codes');
@@ -32,7 +32,7 @@ describe('UserSecureRouter', () => {
     spyedUserIdValidator = jest.spyOn(AuthMiddleware, 'userIdValidator').mockImplementation((req, res, next) => next());
     spyedValidateToken = jest.spyOn(AuthMiddleware, 'validateToken').mockImplementation((req, res, next) => next());
     
-    app = require('../../app');
+    app = require('../../../app');
 
     server = app.listen(3001);
   })

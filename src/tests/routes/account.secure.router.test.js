@@ -1,6 +1,6 @@
 const request = require('supertest');
-const AuthMiddleware = require('../middleware/auth.middleware');
-const AccountService = require('../modules/accounting/accounts/index');
+const AuthMiddleware = require('../../middleware/auth.middleware');
+const AccountService = require('../../modules/accounting/accounts/index');
 const { StatusCodes } = require('http-status-codes');
 const { OK, NO_CONTENT } = StatusCodes;
 describe('AccountSecureRouter', () => {
@@ -28,7 +28,7 @@ describe('AccountSecureRouter', () => {
     spyedUserIdValidator = jest.spyOn(AuthMiddleware, 'userIdValidator').mockImplementation((req, res, next) => next());
     spyedValidateToken = jest.spyOn(AuthMiddleware, 'validateToken').mockImplementation((req, res, next) => next());
     
-    app = require('../../app');
+    app = require('../../../app');
 
     server = app.listen(3001);
   })
