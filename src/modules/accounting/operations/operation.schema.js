@@ -4,22 +4,21 @@ const OperationSchema = new Schema({
   date: {
     type: Date,
     required: true,
-    default: new Date()
+    default: new Date(),
   },
   category: {
     type: String,
-    required: true
+    required: true,
   },
   operationType: {
     type: String,
-    required: true
+    required: true,
   },
   sum: {
     type: Number,
     required: true,
-    default: 0
-  }
+    default: 0,
+  },
 });
 
-
-module.exports = OperationSchema
+module.exports = OperationSchema;

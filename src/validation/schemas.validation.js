@@ -1,7 +1,6 @@
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
-
 const schemas = {
   userCreate: Joi.object()
     .options({ abortEarly: true, allowUnknown: false })
@@ -18,35 +17,34 @@ const schemas = {
       email: Joi.string().email(),
       login: Joi.string(),
       password: Joi.string(),
-      avatar: Joi.string()
+      avatar: Joi.string(),
     }),
   userLogin: Joi.object().options({ abortEarly: true, allowUnknown: false }).keys({
     login: Joi.string().required(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(6).required(),
   }),
   accountCreate: Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
     name: Joi.string().required(),
-    accountType: Joi.string()
+    accountType: Joi.string(),
   }),
-  accountUpdate:  Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
+  accountUpdate: Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
     _id: Joi.objectId().required(),
     name: Joi.string().required(),
-    accountType: Joi.string()
+    accountType: Joi.string(),
   }),
   operationCreate: Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
     date: Joi.date().required(),
     category: Joi.string().required(),
     operationType: Joi.string().required(),
-    sum: Joi.number().required()
+    sum: Joi.number().required(),
   }),
   operationUpdate: Joi.object().options({ abortEarly: true, allowUnknown: true }).keys({
     _id: Joi.objectId().required(),
     date: Joi.date().required(),
     category: Joi.string().required(),
     operationType: Joi.string().required(),
-    sum: Joi.number().required()
+    sum: Joi.number().required(),
   }),
 };
-
 
 module.exports = schemas;

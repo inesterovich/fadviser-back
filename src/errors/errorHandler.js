@@ -1,4 +1,5 @@
 const { StatusCodes, getReasonPhrase } = require('http-status-codes');
+
 const { INTERNAL_SERVER_ERROR } = StatusCodes;
 const logger = require('../../config/logger');
 
@@ -13,6 +14,6 @@ const errorHandler = (err, req, res, next) => {
   }
 
   next();
-}
+};
 
 module.exports = errorHandler;
