@@ -72,6 +72,8 @@ components:
       description: Access token is missing, expired or invalid
     InternalServerError:
       description: Internal Server Error
+    BadRequestError:
+      description: Validation of request data failed
   securitySchemes:
     bearerAuth:
       type: http
@@ -113,6 +115,8 @@ paths:
       responses:
         201:
           description: Successfull creation
+        400: 
+          $ref: '#/components/responses/BadRequestError'
         417: 
           description: User already exists
         500:

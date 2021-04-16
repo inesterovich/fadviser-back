@@ -36,6 +36,12 @@ class EntityExistsError extends AppError {
     this.status = EXPECTATION_FAILED;
   };
 };
+class AuthenticationError extends Error {
+  constructor(message) {
+    super(message || getReasonPhrase(FORBIDDEN));
+    this.status = FORBIDDEN;
+  }
+}
 
 class AuthorizationError extends AppError {
   constructor(message) {
@@ -44,14 +50,9 @@ class AuthorizationError extends AppError {
   };
 };
 
-class AuthenticationError extends Error {
-  constructor(message) {
-    super(message || getReasonPhrase(FORBIDDEN));
-    this.status = FORBIDDEN;
-  }
-}
 
 module.exports = {
+  _APP_ERROR: AppError,
   NOT_FOUND_ERROR: NotFoundError,
   BAD_REQUEST_ERROR: BadRequestError,
   AUTHORIZATION_ERROR: AuthorizationError,

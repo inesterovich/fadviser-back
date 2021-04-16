@@ -3,18 +3,18 @@ const { StatusCodes } = require('http-status-codes');
 const { OK, NO_CONTENT } = StatusCodes;
 const { checkToken, decodeToken, validateToken, userIdValidator } = require('../middleware/auth.middleware');
 const UserService = require('./index');
-const { _id, userUpdate } = require('../validation/schemas.validation');
+const { userUpdate } = require('../validation/schemas.validation');
 const { validator } = require('../validation/validator');
 const userSecureRouter = Router({ mergeParams: true });
 
-userSecureRouter.all('*', validator(_id, 'params'), checkToken, decodeToken, userIdValidator, validateToken);
+userSecureRouter.all('*', checkToken, decodeToken, userIdValidator, validateToken);
 
 userSecureRouter.get('/', async (req, res) => {
 
   const { userId } = req;
   
   const userEntity = await UserService.getById(userId);
-  
+
   res.status(OK).json(userEntity);
   });
 

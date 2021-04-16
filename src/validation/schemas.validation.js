@@ -3,7 +3,6 @@ Joi.objectId = require('joi-objectid')(Joi);
 
 
 const schemas = {
-  _id: Joi.object().options({ abortEarly: true, allowUnknown: true}),
   userCreate: Joi.object()
     .options({ abortEarly: true, allowUnknown: false })
     .keys({

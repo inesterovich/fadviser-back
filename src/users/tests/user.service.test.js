@@ -89,7 +89,7 @@ describe('UserService:', () => {
 
 
 
-  })
+  });
 
   
   describe('register', () => {
@@ -210,14 +210,14 @@ describe('UserService:', () => {
     })
 
     it('throws authentication error with bad credentials', async () => {
-       await expect(UserService.login(userMockData.login, 'wrongpassword')).rejects.toThrowError(AUTHENTICATION_ERROR);
+      await expect(UserService.login(userMockData.login, 'wrongpassword')).rejects.toThrowError(AUTHENTICATION_ERROR);
     })
 
     it('throws not found error with unregistered user', async () => {
       await expect(UserService.login('fakeLogin', userMockData.password)).rejects.toThrowError(NOT_FOUND_ERROR);
     })
 
-  })
+  });
 
   describe('update', () => {
     let userMockData = {
@@ -261,7 +261,7 @@ describe('UserService:', () => {
   
     })
     
-    it('saves user._id after update', async() => {
+    it('saves user._id after update', async () => {
       const userUpdate = {
         login: 'dev',
         email: 'maria@dev.ru',
@@ -314,9 +314,9 @@ describe('UserService:', () => {
 
 
     it('User collection after error is not changed', async () => {
-      const fakeUserId = mongoose.Types.ObjectId('4edd40c86762e0fb12000003') ;
+      const fakeUserId = mongoose.Types.ObjectId('4edd40c86762e0fb12000003');
       try {
-       await UserService.getById(fakeUserId)
+        await UserService.getById(fakeUserId)
       } catch (error) {
        
       }
@@ -327,7 +327,7 @@ describe('UserService:', () => {
     
     })
 
-  })
+  });
   
   describe('remove', () => {
     let userMockData = {

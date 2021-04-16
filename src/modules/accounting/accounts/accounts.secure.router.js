@@ -9,7 +9,7 @@ const OperationSecureRouter = require('../operations/operation.secure.router');
 
 const AcccountsSecureRouter = Router({ mergeParams: true });
 
-AcccountsSecureRouter.all('*', validator(_id, 'params'), checkToken, decodeToken, userIdValidator, validateToken);
+AcccountsSecureRouter.all('*', checkToken, decodeToken, userIdValidator, validateToken);
 
 
 AcccountsSecureRouter.get('/', async (req, res) => {

@@ -33,7 +33,6 @@ OperationSecureRouter.post('/:operationId/update',
 //baseURL/users/:userId/accounts/:accountId/:operationId/delete
 OperationSecureRouter.get('/:operationId/delete',  async (req, res) => {
   const account = await OperationService.remove(req.params.accountId, req.params.operationId);
-  // Нужна проверка на несуществующую операцию
 
 return res.status(OK).json(account);
 });

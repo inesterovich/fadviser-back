@@ -1,8 +1,6 @@
 require('express-async-errors');
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
-const winston = require('./config/logger');
-const morgan = require('morgan');
 const createError = require('http-errors');
 const errorHandler = require('./src/errors/errorHandler');
 const { StatusCodes } = require('http-status-codes');
@@ -10,17 +8,13 @@ const { NOT_FOUND } = StatusCodes;
 const path = require('path');
 const userRouter = require('./src/users/user.router');
 
-const start = require('./start');
 
 
 const swaggerDocument = YAML.load(path.join(__dirname, './docs/api.yaml'))
 
-const { PORT, MONGO_CONNECTION_STRING } = require('./config/config');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const express = require('express');
 const helmet = require('helmet');
-const { loggers } = require('winston');
 const app = express();
 
 
@@ -59,6 +53,9 @@ app.use(errorHandler);
 const all_routes = require('express-list-endpoints');
 console.log(all_routes(server));
 */
+process.on('unhandledRejection', reason => {
+  process.emit('uncaughtException', reason);
+});
 
 /*
 
