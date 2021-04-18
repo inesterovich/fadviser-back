@@ -18,7 +18,7 @@ userSecureRouter.get('/', async (req, res) => {
 
   const userEntity = await UserService.getById(userId);
 
-  res.status(OK).json(userEntity);
+  res.status(OK).json(userEntity.toResponce());
 });
 
 userSecureRouter.post('/update', validator(userUpdate, 'body'), async (req, res) => {

@@ -53,4 +53,16 @@ UserSchema.pre('findOneAndUpdate', async function preUpdate(next) {
   next();
 });
 
+UserSchema.methods.toResponce = function () {
+  const { _id, ...rest } = this.toJSON();
+  delete rest.password;
+  delete rest.userSecret;
+  delete rest.__v;
+
+  return {
+    _id,
+    ...rest
+  }
+}
+
 module.exports = model('User', UserSchema);
