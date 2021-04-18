@@ -18,6 +18,11 @@ const AccountSchema = new Schema({
     default: 0,
   },
 
+  categories: {
+    type: Types.ObjectId,
+    ref: 'financeCategories'
+  },
+
   owner: {
     type: Types.ObjectId,
     ref: 'User',
