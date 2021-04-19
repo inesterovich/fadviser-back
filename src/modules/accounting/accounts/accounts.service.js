@@ -1,4 +1,3 @@
-const { error } = require('winston');
 const { ENTITY_EXISTS, NOT_FOUND_ERROR, BAD_REQUEST_ERROR } = require('../../../errors/appError');
 const financeCategoriesModel = require('../finance-categories/finance.categories.model');
 
@@ -18,9 +17,7 @@ const get = (AccountModel) => async (accountId) => {
 const getAll = (AccountModel) => async (userId) => {
   if (!userId) throw new BAD_REQUEST_ERROR('userId is missing');
   const accounts = await AccountModel.find({ owner: userId }).populate('categories');
-  if (!accounts.length) {
-    throw new NOT_FOUND_ERROR('This data not found');
-  }
+  // В данном месте надо отдавать любой полученный результат
 
   return accounts;
 };
@@ -32,7 +29,7 @@ const create = (AccountModel) => async (accountData, userId) => {
     let financeCategories = await financeCategoriesModel.findOne({ owner: userId });
 
     if (!financeCategories) {
-     financeCategories = await financeCategoriesModel.create({ owner: userId });
+      financeCategories = await financeCategoriesModel.create({ owner: userId });
     }
 
     const initialOperation = {
@@ -48,12 +45,11 @@ const create = (AccountModel) => async (accountData, userId) => {
       categories: financeCategories._id,
       owner: userId,
     };
-     const account = await AccountModel.create(data);
-   
+    const account = await AccountModel.create(data);
+
     return await AccountModel
       .findOne({ _id: account._id })
       .populate('categories');
-    
   } catch (error) {
     if (error.code === MONGO_ENTITY_EXISTS_ERROR_CODE) {
       throw new ENTITY_EXISTS(`${ENTITY_NAME} with this name already exists`);
@@ -73,7 +69,6 @@ const update = (AccountModel) => async (accountId, accountName) => {
     { name: accountName },
     { new: true },
   ).populate('categories');
-
 };
 
 const remove = (AccountModel) => async (accountId) => {
