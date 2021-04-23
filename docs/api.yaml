@@ -272,7 +272,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Accounts not found yet
-  /users/{userId}/accounts/{{accountId}}:
+  /users/{userId}/accounts/{accountId}:
     parameters:
       - name: userId
         description: userId

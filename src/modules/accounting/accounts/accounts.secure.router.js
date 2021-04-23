@@ -27,11 +27,11 @@ AcccountsSecureRouter.post('/create',
 
     const account = await AccountService.create(req.body, userId);
 
-    res.status(OK).json({ account });
+    res.status(OK).json(account);
   });
 
 AcccountsSecureRouter.get('/:accountId/', async (req, res) => {
-  const account = await AccountService.get(req.params.userId);
+  const account = await AccountService.get(req.params.accountId);
 
   res.status(OK).json(account);
 });
