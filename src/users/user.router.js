@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { StatusCodes } = require('http-status-codes');
 
-const { OK, CREATED } = StatusCodes;
+const { CREATED } = StatusCodes;
 const UserService = require('./index');
 const { validator } = require('../validation/validator');
 const { userCreate, userLogin } = require('../validation/schemas.validation');
@@ -20,7 +20,7 @@ userRouter.post('/login', validator(userLogin, 'body'), async (req, res) => {
   const { login, password } = req.body;
   const authData = await UserService.login(login, password);
 
-  return res.status(OK).json(authData);
+  return res.status(CREATED).json(authData);
 });
 
 userRouter.use('/:userId', userSecureRouter);

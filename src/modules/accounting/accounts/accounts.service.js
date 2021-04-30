@@ -16,7 +16,15 @@ const get = (AccountModel) => async (accountId) => {
 };
 const getAll = (AccountModel) => async (userId) => {
   if (!userId) throw new BAD_REQUEST_ERROR('userId is missing');
-  const accounts = await AccountModel.find({ owner: userId }).populate('categories');
+  const accounts = await AccountModel.find({ owner: userId }).populate('categories').lean();
+
+  accounts.map((account) => {
+    delete account.owner;
+    delete account.categories;
+    delete account.operations;
+    delete account.__v;
+    return account;
+  });
   // В данном месте надо отдавать любой полученный результат
 
   return accounts;

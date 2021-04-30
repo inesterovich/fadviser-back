@@ -12,7 +12,6 @@ const schemas = {
   userUpdate: Joi.object()
     .options({ abortEarly: true, allowUnknown: true })
     .keys({
-      _id: Joi.objectId().required(),
       name: Joi.string().allow(''),
       email: Joi.string().email(),
       login: Joi.string(),

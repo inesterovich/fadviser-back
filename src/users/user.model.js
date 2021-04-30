@@ -61,8 +61,8 @@ UserSchema.methods.toResponce = function () {
 
   return {
     _id,
-    ...rest
-  }
-}
+    ...rest,
+  };
+};
 
 module.exports = model('User', UserSchema);

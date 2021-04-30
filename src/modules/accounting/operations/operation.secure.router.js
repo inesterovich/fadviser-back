@@ -16,7 +16,7 @@ OperationSecureRouter.post('/add', validator(operationCreate, 'body'),
     res.status(OK).json(account);
   });
 // baseURL/users/:userId/accounts/:accountId/:operationId/update
-OperationSecureRouter.post('/:operationId/update',
+OperationSecureRouter.put('/:operationId/',
   validator(operationUpdate, 'body'), async (req, res) => {
     const account = await OperationService.update(req.params.accountId, req.body);
 
@@ -24,7 +24,7 @@ OperationSecureRouter.post('/:operationId/update',
   });
 
 // baseURL/users/:userId/accounts/:accountId/:operationId/delete
-OperationSecureRouter.get('/:operationId/delete', async (req, res) => {
+OperationSecureRouter.delete('/:operationId', async (req, res) => {
   const account = await OperationService.remove(req.params.accountId, req.params.operationId);
 
   return res.status(OK).json(account);

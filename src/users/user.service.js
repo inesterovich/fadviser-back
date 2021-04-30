@@ -100,7 +100,6 @@ const remove = (UserModel) => async (id) => {
   await AccountModel.deleteMany({ owner: id });
 };
 
-
 module.exports = (UserModel) => ({
   register: register(UserModel),
   login: login(UserModel),

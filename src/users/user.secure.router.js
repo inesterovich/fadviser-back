@@ -21,14 +21,16 @@ userSecureRouter.get('/', async (req, res) => {
   res.status(OK).json(userEntity.toResponce());
 });
 
-userSecureRouter.post('/update', validator(userUpdate, 'body'), async (req, res) => {
+// Сделать get/put/delete
+
+userSecureRouter.put('/', validator(userUpdate, 'body'), async (req, res) => {
   req.body._id = req.params.userId;
   const userEntity = await UserService.update(req.body);
 
-  res.status(OK).send(userEntity);
+  res.status(OK).send(userEntity.toResponce());
 });
 
-userSecureRouter.get('/delete', async (req, res) => {
+userSecureRouter.delete('/', async (req, res) => {
   const { userId } = req;
   await UserService.remove(userId);
 
