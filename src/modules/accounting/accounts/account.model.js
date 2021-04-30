@@ -20,7 +20,7 @@ const AccountSchema = new Schema({
 
   categories: {
     type: Types.ObjectId,
-    ref: 'financeCategories'
+    ref: 'financeCategories',
   },
 
   owner: {
@@ -58,6 +58,5 @@ AccountSchema.methods.updateDate = function (editedOperation) {
     }
   }
 };
-
 
 module.exports = model('Account', AccountSchema);
