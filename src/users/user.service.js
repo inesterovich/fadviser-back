@@ -9,30 +9,46 @@ const ENTITY_NAME = 'user';
 const MONGO_ENTITY_EXISTS_ERROR_CODE = 11000;
 const AccountModel = require('../modules/accounting/accounts/account.model');
 
-const getById = (UserModel) => async (id) => {
+const getById = (UserModel) => async (id, mode = 'default') => {
   const user = await UserModel.findOne({ _id: id });
 
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { id });
   }
 
-  return user;
+  switch (mode) {
+    case 'response':
+      return user.toResponse();
+    default:
+      return user;
+  }
 };
-const getByLogin = (UserModel) => async (login) => {
+const getByLogin = (UserModel) => async (login, mode = 'default') => {
   const user = await UserModel.findOne({ login });
 
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { login });
   }
-  return user;
+
+  switch (mode) {
+    case 'response':
+      return user.toResponse();
+    default:
+      return user;
+  }
 };
 
-const getByEmail = (UserModel) => async (email) => {
+const getByEmail = (UserModel) => async (email, mode = 'default') => {
   const user = await UserModel.findOne({ email });
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { email });
   }
-  return user;
+  switch (mode) {
+    case 'response':
+      return user.toResponse();
+    default:
+      return user;
+  }
 };
 
 const register = (UserModel) => async (userData) => {
@@ -74,7 +90,7 @@ const login = (UserModel) => async (userLogin, userPassword) => {
 
   };
 };
-const update = (UserModel) => async (userData) => {
+const update = (UserModel) => async (userData, mode = 'default') => {
   const { _id } = userData;
 
   if (!_id) {
@@ -93,7 +109,12 @@ const update = (UserModel) => async (userData) => {
     throw new NOT_FOUND_ERROR(`${ENTITY_NAME} is not exists`);
   }
 
-  return user;
+  switch (mode) {
+    case 'response':
+      return user.toResponse();
+    default:
+      return user;
+  }
 };
 const remove = (UserModel) => async (id) => {
   await UserModel.findOneAndRemove({ _id: id });

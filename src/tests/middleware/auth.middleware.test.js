@@ -1,3 +1,4 @@
+/* eslint-disable */
 const AuthMiddleware = require('../../middleware/auth.middleware');
 const jwt = require('jsonwebtoken');
 const randomString = require('randomstring');
@@ -5,6 +6,8 @@ const { AUTHENTICATION_ERROR, AUTHORIZATION_ERROR } = require('../../errors/appE
 const { StatusCodes } = require('http-status-codes');
 const { FORBIDDEN } = StatusCodes;
 const UserService = require('../../users/index');
+const UserModel = require('../../users/user.model');
+
 
 describe('AuthMiddleware', () => {
   let userId = '6078800db457a8b8f76c5302'
@@ -19,6 +22,10 @@ describe('AuthMiddleware', () => {
       secret,
       { expiresIn: '4h' }
     );
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   })
 
 
@@ -150,7 +157,7 @@ describe('AuthMiddleware', () => {
 
     it('should return undefined if token valid', async () => {
 
-      jest.spyOn(UserService, 'getById').mockResolvedValueOnce({
+      jest.spyOn(UserModel, 'findOne').mockResolvedValueOnce({
         userSecret: secret
       })
 
@@ -170,7 +177,7 @@ describe('AuthMiddleware', () => {
 
     it('should throw AUTHORIZATION_ERROR if token invalid', async () => {
 
-      jest.spyOn(UserService, 'getById').mockResolvedValueOnce({
+      jest.spyOn(UserModel, 'findOne').mockResolvedValueOnce({
         userSecret: 'fakeSecret'
       })
 

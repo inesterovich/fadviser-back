@@ -16,18 +16,16 @@ userSecureRouter.all('*', checkToken, decodeToken, userIdValidator, validateToke
 userSecureRouter.get('/', async (req, res) => {
   const { userId } = req;
 
-  const userEntity = await UserService.getById(userId);
+  const userEntity = await UserService.getById(userId, 'response');
 
-  res.status(OK).json(userEntity.toResponce());
+  res.status(OK).json(userEntity);
 });
-
-// Сделать get/put/delete
 
 userSecureRouter.put('/', validator(userUpdate, 'body'), async (req, res) => {
   req.body._id = req.params.userId;
-  const userEntity = await UserService.update(req.body);
+  const userEntity = await UserService.update(req.body, 'response');
 
-  res.status(OK).send(userEntity.toResponce());
+  res.status(OK).send(userEntity);
 });
 
 userSecureRouter.delete('/', async (req, res) => {

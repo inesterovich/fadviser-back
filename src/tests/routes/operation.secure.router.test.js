@@ -1,3 +1,4 @@
+/* eslint-disable */
 const request = require('supertest');
 const AuthMiddleware = require('../../middleware/auth.middleware');
 const OperationService = require('../../modules/accounting/operations/index');
@@ -58,10 +59,10 @@ describe ('OperationSecureRouter', () => {
 
   })
 
-  it('POST /users/:userId/accounts/:accountId/:operationId/update sends json', async () => {
+  it('PUT /users/:userId/accounts/:accountId/:operationId sends json', async () => {
     jest.spyOn(OperationService, 'update').mockResolvedValueOnce({});
     await request(server)
-    .post(`/users/${userId}/accounts/${accountId}/${operationId}/update`)
+    .put(`/users/${userId}/accounts/${accountId}/${operationId}`)
       .send({
       _id: operationId,
       date: new Date(),
@@ -73,11 +74,11 @@ describe ('OperationSecureRouter', () => {
     .expect(OK).expect('Content-Type', /json/);
   })
 
-  it('GET /users/:userId/accounts/:accountId/:operationId/delete sends json', async () => {
+  it('DELETE /users/:userId/accounts/:accountId/:operationId sends json', async () => {
     jest.spyOn(OperationService, 'remove').mockResolvedValueOnce({})
 
     await request(server)
-    .get(`/users/${userId}/accounts/${accountId}/${operationId}/delete`)
+    .delete(`/users/${userId}/accounts/${accountId}/${operationId}`)
     .expect(OK).expect('Content-Type', /json/);
   })
 

@@ -1,8 +1,10 @@
+/* eslint-disable */
+
 const request = require('supertest');
 const AuthMiddleware = require('../../middleware/auth.middleware');
 const AccountService = require('../../modules/accounting/accounts/index');
 const { StatusCodes } = require('http-status-codes');
-const { OK, NO_CONTENT } = StatusCodes;
+const { OK, NO_CONTENT, CREATED } = StatusCodes;
 describe('AccountSecureRouter', () => {
   let app;
   let server;
@@ -47,17 +49,17 @@ describe('AccountSecureRouter', () => {
 
   })
 
-  it('POST /users/:userId/accounts/create sends json', async () => {
+  it('POST /users/:userId/accounts sends json', async () => {
     jest.spyOn(AccountService, 'create').mockResolvedValueOnce({});
 
     await request(server)
-      .post(`/users/${userId}/accounts/create`)
+      .post(`/users/${userId}/accounts`)
       .send({
         name: 'Test account Name',
         accountType: 'Bank account'
       })
       .set('Content-Type', 'application/json')
-      .expect(OK)
+      .expect(CREATED)
       .expect('Content-Type', /json/);
   })
 
@@ -70,10 +72,10 @@ describe('AccountSecureRouter', () => {
 
   })
 
-  it('GET /users/:userId/accounts/:accountId/delete sends json', async () => {
+  it('DELETE /users/:userId/accounts/:accountId sends json', async () => {
     jest.spyOn(AccountService, 'remove').mockResolvedValueOnce({});
     await request(server)
-      .get(`/users/${userId}/accounts/${accountId}/delete`)
+      .delete(`/users/${userId}/accounts/${accountId}`)
       .expect(NO_CONTENT)
     
   })
