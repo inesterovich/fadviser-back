@@ -20,7 +20,7 @@ const app = express();
 app.use(helmet());
 
 const corsOptions = {
-  methods: 'GET, POST',
+  methods: 'GET, POST, PUT, DELETE',
 };
 app.use(cors(corsOptions));
 
