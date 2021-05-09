@@ -1,3 +1,4 @@
+/* eslint-disable*/
 const mongoose = require('mongoose');
 const { BAD_REQUEST_ERROR } = require('../../errors/appError');
 const AccountModel = require('../../modules/accounting/accounts/account.model');

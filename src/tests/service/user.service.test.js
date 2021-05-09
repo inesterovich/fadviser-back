@@ -68,9 +68,9 @@ describe('UserService:', () => {
     });
 
     it('getters works properly', async () => {
-      const userById = await UserService.getById(user._id);
-      const userByEmail = await UserService.getByEmail(user.email);
-      const userByLogin = await UserService.getByLogin(user.login);
+      const userById = await UserService.getById(user._id, 'response');
+      const userByEmail = await UserService.getByEmail(user.email, 'response');
+      const userByLogin = await UserService.getByLogin(user.login, 'response');
       expect(userById).toBeDefined();
       expect(userByEmail).toBeDefined();
       expect(userByLogin).toBeDefined();

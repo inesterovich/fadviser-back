@@ -4,13 +4,15 @@ const {
   AUTHENTICATION_ERROR, NOT_FOUND_ERROR, ENTITY_EXISTS, BAD_REQUEST_ERROR,
 } = require('../errors/appError');
 const { JWT_EXPIRE_TIME } = require('../../config/config');
+const AccountModel = require('../modules/accounting/accounts/account.model');
+const toResponse = require('../utils/toResponse');
+const maskEmail = require('../utils/maskEmail');
 
 const ENTITY_NAME = 'user';
 const MONGO_ENTITY_EXISTS_ERROR_CODE = 11000;
-const AccountModel = require('../modules/accounting/accounts/account.model');
 
 const getById = (UserModel) => async (id, mode = 'default') => {
-  const user = await UserModel.findOne({ _id: id });
+  const user = await UserModel.findOne({ _id: id }).lean();
 
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { id });
@@ -18,13 +20,13 @@ const getById = (UserModel) => async (id, mode = 'default') => {
 
   switch (mode) {
     case 'response':
-      return user.toResponse();
+      return maskEmail(toResponse(user));
     default:
       return user;
   }
 };
 const getByLogin = (UserModel) => async (login, mode = 'default') => {
-  const user = await UserModel.findOne({ login });
+  const user = await UserModel.findOne({ login }).lean();
 
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { login });
@@ -32,20 +34,20 @@ const getByLogin = (UserModel) => async (login, mode = 'default') => {
 
   switch (mode) {
     case 'response':
-      return user.toResponse();
+      return maskEmail(toResponse(user));
     default:
       return user;
   }
 };
 
 const getByEmail = (UserModel) => async (email, mode = 'default') => {
-  const user = await UserModel.findOne({ email });
+  const user = await UserModel.findOne({ email }).lean();
   if (!user) {
     throw new NOT_FOUND_ERROR(ENTITY_NAME, { email });
   }
   switch (mode) {
     case 'response':
-      return user.toResponse();
+      return maskEmail(toResponse(user));
     default:
       return user;
   }
@@ -103,7 +105,7 @@ const update = (UserModel) => async (userData, mode = 'default') => {
   const user = await UserModel.findOneAndUpdate({ _id }, {
     $set: updateObject,
   },
-  { new: true });
+  { new: true }).lean();
 
   if (!user) {
     throw new NOT_FOUND_ERROR(`${ENTITY_NAME} is not exists`);
@@ -111,7 +113,7 @@ const update = (UserModel) => async (userData, mode = 'default') => {
 
   switch (mode) {
     case 'response':
-      return user.toResponse();
+      return maskEmail(toResponse(user));
     default:
       return user;
   }
