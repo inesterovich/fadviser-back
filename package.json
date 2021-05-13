@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js",
+    "start": "dotenv -e .env.production node server.js",
+    "server": "dotenv -e .env.development nodemon server.js",
     "test": "jest --runInBand",
     "lint": "eslint ./ --ignore-path .gitignore",
     "test:service": "jest --runInBand src/tests/service",
@@ -39,6 +39,7 @@
     "@types/jest": "^26.0.22",
     "@types/mongoose": "^5.10.4",
     "cross-env": "^7.0.3",
+    "dotenv-cli": "^4.0.0",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
