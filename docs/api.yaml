@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Backend API for Fadviser Financial service
-  version: 0.0.1
+  version: 0.5.0
 
 servers: 
   - url: /

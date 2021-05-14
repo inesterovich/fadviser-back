@@ -12,6 +12,7 @@ const swaggerDocument = YAML.load(path.join(__dirname, './docs/api.yaml'));
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
+const { URL } = require('./config/config');
 const userRouter = require('./src/users/user.router');
 const errorHandler = require('./src/errors/errorHandler');
 
@@ -20,8 +21,10 @@ const app = express();
 app.use(helmet());
 
 const corsOptions = {
+  origin: URL,
   methods: 'GET, POST, PUT, DELETE',
 };
+
 app.use(cors(corsOptions));
 
 app.use(express.json({ extended: true }));
@@ -43,16 +46,9 @@ app.use('/users', userRouter);
 app.use((req, res, next) => next(createError(NOT_FOUND)));
 
 app.use(errorHandler);
-/*
-const all_routes = require('express-list-endpoints');
-console.log(all_routes(server));
-*/
+
 process.on('unhandledRejection', (reason) => {
   process.emit('uncaughtException', reason);
 });
-
-/*
-
-*/
 
 module.exports = app;
